@@ -71,17 +71,24 @@ class SortingVisualizer:
             self.frame_count = 0
             self.recording = True  # Auto-start recording when sorting
     
-    def draw_bars(self):
+    def draw_bars(self, for_recording=False):
         """Draw all bars with rainbow colors."""
         self.screen.fill(BACKGROUND_COLOR)
         
-        bar_height_unit = (WINDOW_HEIGHT - 100) / self.max_value
+        # Use full height during sorting/recording (no space for UI)
+        # Only reserve space for UI in menu mode
+        if for_recording or not self.in_menu:
+            bar_height_unit = (WINDOW_HEIGHT - 20) / self.max_value
+            y_offset = 10
+        else:
+            bar_height_unit = (WINDOW_HEIGHT - 100) / self.max_value
+            y_offset = 50
         
         for i, value in enumerate(self.array):
             # Calculate bar dimensions
             x = i * BAR_WIDTH
             height = int(value * bar_height_unit)
-            y = WINDOW_HEIGHT - height - 50
+            y = WINDOW_HEIGHT - height - y_offset
             
             # Get rainbow color based on value
             color = get_rainbow_color(value, self.max_value)
@@ -92,27 +99,28 @@ class SortingVisualizer:
             
             pygame.draw.rect(self.screen, color, (x, y, BAR_WIDTH - 1, height))
     
-    def draw_ui(self):
+    def draw_ui(self, show_controls=True):
         """Draw UI elements (algorithm name, controls info)."""
-        # Algorithm name and speed
-        text = self.font.render(f"Algorithm: {self.current_algorithm}", True, (255, 255, 255))
-        self.screen.blit(text, (10, 10))
+        # Algorithm name and speed - only show when in menu
+        if self.in_menu:
+            text = self.font.render(f"Algorithm: {self.current_algorithm}", True, (255, 255, 255))
+            self.screen.blit(text, (10, 10))
+            
+            speed_text = self.font.render(f"Speed: {self.speed}x", True, (100, 255, 100))
+            self.screen.blit(speed_text, (10, 40))
         
-        speed_text = self.font.render(f"Speed: {self.speed}x", True, (100, 255, 100))
-        self.screen.blit(speed_text, (10, 40))
-        
-        # Recording indicator
-        if self.recording:
+        # Recording indicator - only for user display, never during recording
+        if self.recording and not show_controls:
+            pass  # Don't show REC indicator in final display either
+        elif self.recording:
             rec_text = self.font.render("● REC", True, (255, 50, 50))
             self.screen.blit(rec_text, (WINDOW_WIDTH - 80, 10))
         
-        # Controls
-        if self.in_menu:
+        # Controls - only show in menu mode
+        if show_controls and self.in_menu:
             controls = "UP/DOWN: Select Algorithm | SPACE: Start | +/-: Speed | ESC: Quit"
-        else:
-            controls = "SPACE: Start | R: Scramble | +/-: Speed | M: Menu | ESC: Quit"
-        ctrl_text = self.font.render(controls, True, (180, 180, 180))
-        self.screen.blit(ctrl_text, (10, WINDOW_HEIGHT - 35))
+            ctrl_text = self.font.render(controls, True, (180, 180, 180))
+            self.screen.blit(ctrl_text, (10, WINDOW_HEIGHT - 35))
     
     def draw_menu(self):
         """Draw algorithm selection menu."""
@@ -148,11 +156,14 @@ class SortingVisualizer:
         self.screen.blit(instr, instr_rect)
     
     def save_frame(self):
-        """Save current frame as PNG."""
+        """Save current frame as PNG - only the simulation, no UI."""
         if self.recording and SAVE_FRAMES:
+            # Draw bars only (for_recording=True means no UI space reserved)
+            self.draw_bars(for_recording=True)
             filename = os.path.join(FRAMES_FOLDER, f"frame_{self.frame_count:06d}.png")
             pygame.image.save(self.screen, filename)
             self.frame_count += 1
+            # Redraw with UI for display (will be drawn in main loop anyway)
     
     def update_sorting(self):
         """Advance sorting by speed steps per frame."""
@@ -163,8 +174,14 @@ class SortingVisualizer:
                     self.highlighted = (idx1, idx2)
                 except StopIteration:
                     self.sorting = False
-                    self.recording = False  # Stop recording when done
                     self.highlighted = (-1, -1)
+                    # Save final sorted frame before stopping recording
+                    if self.recording:
+                        self.draw_bars(for_recording=True)
+                        filename = os.path.join(FRAMES_FOLDER, f"frame_{self.frame_count:06d}.png")
+                        pygame.image.save(self.screen, filename)
+                        self.frame_count += 1
+                        self.recording = False
                     break
     
     def handle_events(self):
