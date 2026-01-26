@@ -1,0 +1,92 @@
+/* Loops Visualization System - Responsive Styles */
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .terminal-panel {
+        min-width: 280px;
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 80px;
+    }
+    
+    .sidebar-header {
+        padding: 16px;
+    }
+    
+    .logo-text {
+        display: none;
+    }
+    
+    .nav-item span {
+        display: none;
+    }
+    
+    .nav-item {
+        justify-content: center;
+    }
+    
+    .main-content {
+        margin-left: 80px;
+    }
+    
+    .system-status span:not(.status-dot) {
+        display: none;
+    }
+    
+    .content-wrapper {
+        flex-direction: column;
+    }
+    
+    .terminal-panel {
+        max-width: none;
+        min-width: auto;
+        height: 300px;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .content {
+        flex: 1;
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 0 16px;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .simulations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .outputs-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .simulation-actions {
+        flex-direction: column;
+    }
+    
+    .simulation-card .btn {
+        width: 100%;
+    }
+}

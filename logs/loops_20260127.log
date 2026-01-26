@@ -168,3 +168,64 @@
 2026-01-27 02:14:30,317 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:30] "POST /api/simulations/sorting_visualizer/launch HTTP/1.1" 200 -
 2026-01-27 02:14:30,318 | INFO | Simulation log: E:\test_repos\loops\logs\simulation_sorting_visualizer_20260127_021430.log
 2026-01-27 02:17:17,472 | INFO | Simulation sorting_visualizer: Process exited with code 3221225786
+2026-01-27 02:21:42,261 | INFO | ==================================================
+2026-01-27 02:21:42,261 | INFO | Loops Visualization System - Starting
+2026-01-27 02:21:42,261 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 02:21:42,262 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 02:21:42,263 | INFO | Found 1 simulation(s)
+2026-01-27 02:21:42,263 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 02:21:42,264 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 02:21:42,306 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 02:21:42,306 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 02:21:44,046 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "[36mGET / HTTP/1.1[0m" 304 -
+2026-01-27 02:21:44,072 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "[36mGET /css/style.css HTTP/1.1[0m" 304 -
+2026-01-27 02:21:44,074 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "[36mGET /js/app.js HTTP/1.1[0m" 304 -
+2026-01-27 02:21:44,325 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "GET /api/simulations HTTP/1.1" 200 -
+2026-01-27 02:21:44,326 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "GET /socket.io/?EIO=4&transport=polling&t=Ply4wG_ HTTP/1.1" 200 -
+2026-01-27 02:21:44,430 | INFO | Client connected via WebSocket
+2026-01-27 02:21:44,431 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "POST /socket.io/?EIO=4&transport=polling&t=Ply4wIf&sid=DRKeHsxJnZ3An_OKAAAA HTTP/1.1" 200 -
+2026-01-27 02:21:44,434 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "GET /socket.io/?EIO=4&transport=polling&t=Ply4wIg&sid=DRKeHsxJnZ3An_OKAAAA HTTP/1.1" 200 -
+2026-01-27 02:21:44,478 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "GET /api/system/info HTTP/1.1" 200 -
+2026-01-27 02:21:44,528 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:44] "GET /socket.io/?EIO=4&transport=polling&t=Ply4wK7&sid=DRKeHsxJnZ3An_OKAAAA HTTP/1.1" 200 -
+2026-01-27 02:21:45,913 | INFO | Launching simulation: Sorting Visualizer (embedded=True)
+2026-01-27 02:21:45,913 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 02:21:45,924 | INFO | Started streaming output for simulation: sorting_visualizer
+2026-01-27 02:21:45,924 | INFO | 127.0.0.1 - - [27/Jan/2026 02:21:45] "POST /api/simulations/sorting_visualizer/launch HTTP/1.1" 200 -
+2026-01-27 02:21:45,924 | INFO | Simulation log: E:\test_repos\loops\logs\simulation_sorting_visualizer_20260127_022145.log
+2026-01-27 02:25:55,731 | INFO | Simulation sorting_visualizer: Process exited with code 0
+2026-01-27 02:32:19,730 | INFO | ==================================================
+2026-01-27 02:32:19,731 | INFO | Loops Visualization System - Starting
+2026-01-27 02:32:19,731 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 02:32:19,731 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 02:32:19,732 | INFO | Found 1 simulation(s)
+2026-01-27 02:32:19,732 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 02:32:19,733 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 02:32:19,777 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 02:32:19,777 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 02:32:21,554 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:21] "GET / HTTP/1.1" 200 -
+2026-01-27 02:32:21,572 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:21] "GET /css/style.css HTTP/1.1" 200 -
+2026-01-27 02:32:21,626 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:21] "GET /js/app.js HTTP/1.1" 200 -
+2026-01-27 02:32:21,871 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:21] "GET /api/simulations HTTP/1.1" 200 -
+2026-01-27 02:32:21,871 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:21] "GET /socket.io/?EIO=4&transport=polling&t=Ply7Lwe HTTP/1.1" 200 -
+2026-01-27 02:32:22,007 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:22] "GET /api/system/info HTTP/1.1" 200 -
+2026-01-27 02:32:22,068 | INFO | Client connected via WebSocket
+2026-01-27 02:32:22,069 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:22] "POST /socket.io/?EIO=4&transport=polling&t=Ply7LzO&sid=rLZcfeusRcF6j46FAAAA HTTP/1.1" 200 -
+2026-01-27 02:32:22,072 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:22] "GET /socket.io/?EIO=4&transport=polling&t=Ply7LzP&sid=rLZcfeusRcF6j46FAAAA HTTP/1.1" 200 -
+2026-01-27 02:32:22,181 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:22] "GET /socket.io/?EIO=4&transport=polling&t=Ply7L_V HTTP/1.1" 200 -
+2026-01-27 02:32:22,221 | INFO | Client connected via WebSocket
+2026-01-27 02:32:22,222 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:22] "POST /socket.io/?EIO=4&transport=polling&t=Ply7L_v&sid=xUkU_TBVW8nNg6ayAAAC HTTP/1.1" 200 -
+2026-01-27 02:32:22,234 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:22] "GET /socket.io/?EIO=4&transport=polling&t=Ply7L_v.0&sid=xUkU_TBVW8nNg6ayAAAC HTTP/1.1" 200 -
+2026-01-27 02:32:22,328 | INFO | Client disconnected from WebSocket
+2026-01-27 02:32:22,328 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:22] "GET /socket.io/?EIO=4&transport=websocket&sid=xUkU_TBVW8nNg6ayAAAC HTTP/1.1" 200 -
+2026-01-27 02:32:39,448 | ERROR | Error listing videos: No module named 'pygame'
+2026-01-27 02:32:39,448 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:39] "[35m[1mGET /api/video/list HTTP/1.1[0m" 500 -
+2026-01-27 02:32:41,711 | ERROR | Error listing videos: No module named 'pygame'
+2026-01-27 02:32:41,711 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:41] "[35m[1mGET /api/video/list HTTP/1.1[0m" 500 -
+2026-01-27 02:32:42,250 | ERROR | Error listing videos: No module named 'pygame'
+2026-01-27 02:32:42,250 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:42] "[35m[1mGET /api/video/list HTTP/1.1[0m" 500 -
+2026-01-27 02:32:42,904 | ERROR | Error listing videos: No module named 'pygame'
+2026-01-27 02:32:42,904 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:42] "[35m[1mGET /api/video/list HTTP/1.1[0m" 500 -
+2026-01-27 02:32:43,559 | ERROR | Error listing videos: No module named 'pygame'
+2026-01-27 02:32:43,560 | INFO | 127.0.0.1 - - [27/Jan/2026 02:32:43] "[35m[1mGET /api/video/list HTTP/1.1[0m" 500 -

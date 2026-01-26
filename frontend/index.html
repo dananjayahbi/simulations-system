@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loops - Visualization System</title>
-    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/terminal.css">
+    <link rel="stylesheet" href="css/videos.css">
+    <link rel="stylesheet" href="css/responsive.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
@@ -28,6 +36,10 @@
                 <li class="nav-item" data-section="simulations">
                     <i class="fas fa-play-circle"></i>
                     <span>Simulations</span>
+                </li>
+                <li class="nav-item" data-section="outputs">
+                    <i class="fas fa-film"></i>
+                    <span>Outputs</span>
                 </li>
                 <li class="nav-item" data-section="settings">
                     <i class="fas fa-cog"></i>
@@ -171,6 +183,24 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Outputs Section -->
+                <section id="outputs-section" class="section">
+                    <div class="section-header">
+                        <h2>Generated Outputs</h2>
+                        <p>Browse and play generated videos from simulations</p>
+                        <button class="btn btn-primary btn-sm" id="refresh-outputs" style="margin-top: 12px;">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="outputs-grid" id="outputs-grid">
+                        <div class="loading-placeholder">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Loading videos...</span>
+                        </div>
+                    </div>
+                </section>
             </div>
 
             <!-- Terminal Panel (1/3) -->
@@ -223,6 +253,38 @@
         </div>
     </div>
 
+    <!-- Video Player Modal -->
+    <div class="modal video-modal" id="video-modal">
+        <div class="modal-content video-modal-content">
+            <div class="modal-header">
+                <h3 id="video-modal-title">Video Player</h3>
+                <button class="modal-close" id="video-modal-close">&times;</button>
+            </div>
+            <div class="modal-body video-modal-body">
+                <video id="video-player" controls autoplay>
+                    <source id="video-source" src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-info" id="video-info">
+                    <!-- Video details populated by JS -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="video-modal-close-btn">Close</button>
+                <button class="btn btn-primary" id="video-open-folder">
+                    <i class="fas fa-folder-open"></i> Open Folder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/core.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/simulations.js"></script>
+    <script src="js/terminal.js"></script>
+    <script src="js/videos.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -464,6 +464,129 @@ def list_videos():
         }), 500
 
 
+@app.route('/api/video/stream/<path:video_name>', methods=['GET'])
+def stream_video(video_name):
+    """Stream a video file."""
+    try:
+        output_dir = BASE_DIR / "output" / "videos"
+        video_path = output_dir / video_name
+        
+        if not video_path.exists():
+            return jsonify({
+                "status": "error",
+                "message": "Video not found"
+            }), 404
+        
+        # Use Flask's send_file for video streaming
+        from flask import send_file, Response
+        
+        # Get file size for Content-Length header
+        file_size = video_path.stat().st_size
+        
+        # Check for Range header for seeking support
+        range_header = request.headers.get('Range', None)
+        
+        if range_header:
+            # Parse range header
+            byte_start = 0
+            byte_end = file_size - 1
+            
+            match = range_header.replace('bytes=', '').split('-')
+            if match[0]:
+                byte_start = int(match[0])
+            if match[1]:
+                byte_end = int(match[1])
+            
+            length = byte_end - byte_start + 1
+            
+            def generate():
+                with open(video_path, 'rb') as f:
+                    f.seek(byte_start)
+                    remaining = length
+                    while remaining > 0:
+                        chunk_size = min(8192, remaining)
+                        chunk = f.read(chunk_size)
+                        if not chunk:
+                            break
+                        remaining -= len(chunk)
+                        yield chunk
+            
+            response = Response(
+                generate(),
+                status=206,
+                mimetype='video/mp4',
+                headers={
+                    'Content-Range': f'bytes {byte_start}-{byte_end}/{file_size}',
+                    'Accept-Ranges': 'bytes',
+                    'Content-Length': str(length),
+                    'Content-Disposition': f'inline; filename="{video_name}"'
+                }
+            )
+            return response
+        else:
+            # Full file response
+            return send_file(
+                video_path,
+                mimetype='video/mp4',
+                as_attachment=False,
+                download_name=video_name
+            )
+    except Exception as e:
+        logger.error(f"Error streaming video {video_name}: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/video/open-folder', methods=['POST'])
+def open_video_folder():
+    """Open the folder containing a video file."""
+    try:
+        data = request.get_json(silent=True) or {}
+        video_name = data.get('video_name')
+        
+        output_dir = BASE_DIR / "output" / "videos"
+        
+        if video_name:
+            video_path = output_dir / video_name
+            if video_path.exists():
+                # Open folder and select file
+                if sys.platform == 'win32':
+                    subprocess.Popen(['explorer', '/select,', str(video_path)])
+                elif sys.platform == 'darwin':
+                    subprocess.Popen(['open', '-R', str(video_path)])
+                else:
+                    subprocess.Popen(['xdg-open', str(output_dir)])
+            else:
+                # Just open the output folder
+                if sys.platform == 'win32':
+                    subprocess.Popen(['explorer', str(output_dir)])
+                elif sys.platform == 'darwin':
+                    subprocess.Popen(['open', str(output_dir)])
+                else:
+                    subprocess.Popen(['xdg-open', str(output_dir)])
+        else:
+            # Open the videos folder
+            if sys.platform == 'win32':
+                subprocess.Popen(['explorer', str(output_dir)])
+            elif sys.platform == 'darwin':
+                subprocess.Popen(['open', str(output_dir)])
+            else:
+                subprocess.Popen(['xdg-open', str(output_dir)])
+        
+        return jsonify({
+            "status": "success",
+            "message": "Folder opened"
+        })
+    except Exception as e:
+        logger.error(f"Error opening video folder: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
 @app.route('/api/simulations/<sim_id>/frames', methods=['GET'])
 def get_simulation_frames(sim_id):
     """Get list of frame folders for a simulation."""

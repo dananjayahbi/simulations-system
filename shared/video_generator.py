@@ -578,6 +578,7 @@ class VideoGenerator:
             videos.append({
                 'name': video_file.name,
                 'path': str(video_file),
+                'size_bytes': stat.st_size,
                 'size_mb': stat.st_size / (1024 * 1024),
                 'created': datetime.fromtimestamp(stat.st_ctime).isoformat(),
                 'modified': datetime.fromtimestamp(stat.st_mtime).isoformat()
