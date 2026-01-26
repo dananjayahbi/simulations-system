@@ -353,6 +353,163 @@ def get_system_info():
     })
 
 
+# ============================================
+# VIDEO GENERATION ENDPOINTS
+# ============================================
+
+# Import video generator (lazy import to avoid circular imports)
+video_generator = None
+
+def get_video_generator():
+    """Get or create the video generator instance."""
+    global video_generator
+    if video_generator is None:
+        from shared.video_generator import VideoGenerator
+        video_generator = VideoGenerator()
+    return video_generator
+
+
+@app.route('/api/video/generate', methods=['POST'])
+def generate_video_endpoint():
+    """
+    Generate a video from frame folder(s).
+    
+    Request body:
+    {
+        "frame_folders": ["path/to/frames"],  # Required: list of frame folder paths
+        "output_name": "my_video",            # Optional: output video name
+        "fps": 60,                            # Optional: frames per second
+        "quality": "high"                     # Optional: low/medium/high/ultra/lossless
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data or 'frame_folders' not in data:
+            return jsonify({
+                "status": "error",
+                "message": "Missing required field: frame_folders"
+            }), 400
+        
+        frame_folders = data.get('frame_folders', [])
+        output_name = data.get('output_name')
+        fps = data.get('fps', 60)
+        quality = data.get('quality', 'high')
+        
+        if not frame_folders:
+            return jsonify({
+                "status": "error",
+                "message": "frame_folders cannot be empty"
+            }), 400
+        
+        generator = get_video_generator()
+        
+        logger.info(f"Video generation request: {len(frame_folders)} folder(s), fps={fps}, quality={quality}")
+        
+        if len(frame_folders) == 1:
+            # Single folder
+            output_path = generator.generate_video(
+                frame_folder=frame_folders[0],
+                output_name=output_name,
+                fps=fps,
+                quality=quality
+            )
+        else:
+            # Multiple folders - combine
+            if not output_name:
+                output_name = f"combined_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            
+            output_path = generator.generate_from_multiple_folders(
+                frame_folders=frame_folders,
+                output_name=output_name,
+                fps=fps,
+                quality=quality
+            )
+        
+        return jsonify({
+            "status": "success",
+            "message": "Video generated successfully",
+            "video": {
+                "path": str(output_path),
+                "name": output_path.name,
+                "size_mb": output_path.stat().st_size / (1024 * 1024)
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Video generation failed: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/video/list', methods=['GET'])
+def list_videos():
+    """List all generated videos."""
+    try:
+        generator = get_video_generator()
+        videos = generator.list_output_videos()
+        
+        return jsonify({
+            "status": "success",
+            "videos": videos,
+            "count": len(videos)
+        })
+    except Exception as e:
+        logger.error(f"Error listing videos: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/simulations/<sim_id>/frames', methods=['GET'])
+def get_simulation_frames(sim_id):
+    """Get list of frame folders for a simulation."""
+    global SIMULATIONS_REGISTRY
+    
+    if not SIMULATIONS_REGISTRY:
+        SIMULATIONS_REGISTRY = discover_simulations()
+    
+    if sim_id not in SIMULATIONS_REGISTRY:
+        return jsonify({
+            "status": "error",
+            "message": f"Simulation '{sim_id}' not found"
+        }), 404
+    
+    sim = SIMULATIONS_REGISTRY[sim_id]
+    sim_path = Path(sim["path"])
+    
+    # Find all frame folders (directories containing images)
+    frame_folders = []
+    
+    for item in sim_path.iterdir():
+        if item.is_dir() and not item.name.startswith('__'):
+            # Check if it contains image files
+            has_images = any(
+                item.glob(f'*{ext}') 
+                for ext in ['.png', '.jpg', '.jpeg', '.bmp']
+            )
+            if has_images:
+                # Count frames
+                frame_count = sum(
+                    len(list(item.glob(f'*{ext}'))) 
+                    for ext in ['.png', '.jpg', '.jpeg', '.bmp']
+                )
+                frame_folders.append({
+                    "name": item.name,
+                    "path": str(item),
+                    "frame_count": frame_count
+                })
+    
+    return jsonify({
+        "status": "success",
+        "simulation": sim["name"],
+        "frame_folders": frame_folders
+    })
+
+
 # WebSocket Events
 @socketio.on('connect')
 def handle_connect():
