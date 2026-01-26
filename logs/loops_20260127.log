@@ -1,0 +1,23 @@
+2026-01-27 01:56:20,788 | INFO | ==================================================
+2026-01-27 01:56:20,789 | INFO | Loops Visualization System - Starting
+2026-01-27 01:56:20,789 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 01:56:20,790 | INFO | Found 1 simulation(s)
+2026-01-27 01:56:20,791 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 01:56:20,791 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 01:56:20,835 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 01:56:20,836 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 01:56:22,805 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:22] "GET / HTTP/1.1" 200 -
+2026-01-27 01:56:22,838 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:22] "GET /css/style.css HTTP/1.1" 200 -
+2026-01-27 01:56:22,884 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:22] "GET /js/app.js HTTP/1.1" 200 -
+2026-01-27 01:56:23,163 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:23] "GET /socket.io/?EIO=4&transport=polling&t=Plx_6ul HTTP/1.1" 200 -
+2026-01-27 01:56:23,164 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:23] "GET /api/simulations HTTP/1.1" 200 -
+2026-01-27 01:56:23,353 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:23] "GET /api/system/info HTTP/1.1" 200 -
+2026-01-27 01:56:23,429 | INFO | Client connected via WebSocket
+2026-01-27 01:56:23,430 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:23] "POST /socket.io/?EIO=4&transport=polling&t=Plx_6y_&sid=4w6qEatQX6yjzO3mAAAA HTTP/1.1" 200 -
+2026-01-27 01:56:23,437 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:23] "GET /socket.io/?EIO=4&transport=polling&t=Plx_6z0&sid=4w6qEatQX6yjzO3mAAAA HTTP/1.1" 200 -
+2026-01-27 01:56:23,463 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:23] "GET /socket.io/?EIO=4&transport=polling&t=Plx_6zP&sid=4w6qEatQX6yjzO3mAAAA HTTP/1.1" 200 -
+2026-01-27 01:56:25,322 | INFO | Launching simulation: Sorting Visualizer (embedded=True)
+2026-01-27 01:56:25,332 | INFO | Started streaming output for simulation: sorting_visualizer
+2026-01-27 01:56:25,333 | INFO | 127.0.0.1 - - [27/Jan/2026 01:56:25] "POST /api/simulations/sorting_visualizer/launch HTTP/1.1" 200 -
+2026-01-27 01:56:25,333 | INFO | Simulation log: E:\test_repos\loops\logs\simulation_sorting_visualizer_20260127_015625.log

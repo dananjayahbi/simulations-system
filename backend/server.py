@@ -20,12 +20,30 @@ import subprocess
 import json
 import threading
 import queue
+import logging
+from datetime import datetime
 from pathlib import Path
 
 # Setup paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
 SIMULATIONS_DIR = BASE_DIR / "simulations"
+LOGS_DIR = BASE_DIR / "logs"
+
+# Create logs directory if it doesn't exist
+LOGS_DIR.mkdir(exist_ok=True)
+
+# Configure logging
+log_filename = LOGS_DIR / f"loops_{datetime.now().strftime('%Y%m%d')}.log"
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s | %(levelname)s | %(message)s',
+    handlers=[
+        logging.FileHandler(log_filename, encoding='utf-8'),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger('loops')
 
 # Add base dir to path for imports
 sys.path.insert(0, str(BASE_DIR))
@@ -83,23 +101,36 @@ def discover_simulations():
 
 
 def stream_process_output(process, sim_id):
-    """Stream process output to WebSocket clients."""
+    """Stream process output to WebSocket clients and log file."""
+    
+    # Create a per-simulation log file
+    sim_log_file = LOGS_DIR / f"simulation_{sim_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+    
     def read_stream(stream, stream_type):
         try:
-            for line in iter(stream.readline, b''):
-                if line:
-                    text = line.decode('utf-8', errors='replace').rstrip()
-                    socketio.emit('terminal_output', {
-                        'sim_id': sim_id,
-                        'type': stream_type,
-                        'data': text
-                    })
+            with open(sim_log_file, 'a', encoding='utf-8') as log_file:
+                for line in iter(stream.readline, b''):
+                    if line:
+                        text = line.decode('utf-8', errors='replace').rstrip()
+                        # Write to log file
+                        log_file.write(f"[{stream_type}] {text}\n")
+                        log_file.flush()
+                        # Send to WebSocket
+                        socketio.emit('terminal_output', {
+                            'sim_id': sim_id,
+                            'type': stream_type,
+                            'data': text
+                        })
         except Exception as e:
+            logger.error(f"Error streaming output for {sim_id}: {str(e)}")
             socketio.emit('terminal_output', {
                 'sim_id': sim_id,
                 'type': 'error',
                 'data': str(e)
             })
+    
+    logger.info(f"Started streaming output for simulation: {sim_id}")
+    logger.info(f"Simulation log: {sim_log_file}")
     
     # Start threads to read stdout and stderr
     stdout_thread = threading.Thread(target=read_stream, args=(process.stdout, 'stdout'))
@@ -112,11 +143,18 @@ def stream_process_output(process, sim_id):
     # Wait for process to complete
     process.wait()
     
+    exit_message = f'Process exited with code {process.returncode}'
+    logger.info(f"Simulation {sim_id}: {exit_message}")
+    
+    # Write exit to log file
+    with open(sim_log_file, 'a', encoding='utf-8') as log_file:
+        log_file.write(f"[EXIT] {exit_message}\n")
+    
     # Notify completion
     socketio.emit('terminal_output', {
         'sim_id': sim_id,
         'type': 'exit',
-        'data': f'Process exited with code {process.returncode}'
+        'data': exit_message
     })
     
     # Cleanup
@@ -156,6 +194,7 @@ def launch_simulation(sim_id):
         SIMULATIONS_REGISTRY = discover_simulations()
     
     if sim_id not in SIMULATIONS_REGISTRY:
+        logger.warning(f"Simulation not found: {sim_id}")
         return jsonify({
             "status": "error",
             "message": f"Simulation '{sim_id}' not found"
@@ -170,6 +209,7 @@ def launch_simulation(sim_id):
     elif sim["has_main"]:
         launch_file = sim_path / "main.py"
     else:
+        logger.error(f"No launchable file for: {sim_id}")
         return jsonify({
             "status": "error",
             "message": "No launchable file found"
@@ -184,6 +224,8 @@ def launch_simulation(sim_id):
         pass
     
     try:
+        logger.info(f"Launching simulation: {sim['name']} (embedded={use_embedded})")
+        
         if use_embedded:
             # Launch with output streaming
             process = subprocess.Popen(
@@ -224,6 +266,7 @@ def launch_simulation(sim_id):
             "embedded": use_embedded
         })
     except Exception as e:
+        logger.error(f"Error launching {sim_id}: {str(e)}")
         return jsonify({
             "status": "error",
             "message": str(e)
@@ -237,10 +280,12 @@ def stop_simulation(sim_id):
         process = RUNNING_PROCESSES[sim_id]
         process.terminate()
         del RUNNING_PROCESSES[sim_id]
+        logger.info(f"Stopped simulation: {sim_id}")
         return jsonify({
             "status": "success",
             "message": f"Stopped {sim_id}"
         })
+    logger.warning(f"Tried to stop non-running simulation: {sim_id}")
     return jsonify({
         "status": "error",
         "message": "Simulation not running"
@@ -301,13 +346,13 @@ def get_system_info():
 @socketio.on('connect')
 def handle_connect():
     """Handle client connection."""
-    print(f"Client connected")
+    logger.info("Client connected via WebSocket")
 
 
 @socketio.on('disconnect')
 def handle_disconnect():
     """Handle client disconnection."""
-    print(f"Client disconnected")
+    logger.info("Client disconnected from WebSocket")
 
 
 def main():
@@ -318,20 +363,28 @@ def main():
     print(f"📁 Base Directory: {BASE_DIR}")
     print(f"🌐 Frontend: {FRONTEND_DIR}")
     print(f"🎮 Simulations: {SIMULATIONS_DIR}")
+    print(f"📝 Logs: {LOGS_DIR}")
     print("-" * 50)
+    
+    logger.info("=" * 50)
+    logger.info("Loops Visualization System - Starting")
+    logger.info(f"Base Directory: {BASE_DIR}")
     
     # Discover simulations on startup
     global SIMULATIONS_REGISTRY
     SIMULATIONS_REGISTRY = discover_simulations()
     print(f"📊 Found {len(SIMULATIONS_REGISTRY)} simulation(s):")
+    logger.info(f"Found {len(SIMULATIONS_REGISTRY)} simulation(s)")
     for sim_id, sim in SIMULATIONS_REGISTRY.items():
         print(f"   {sim['icon']} {sim['name']}")
+        logger.info(f"  - {sim['name']} ({sim_id})")
     
     print("-" * 50)
     print("🌐 Server starting on http://127.0.0.1:5000")
     print("📡 WebSocket enabled for terminal streaming")
     print("   Press Ctrl+C to stop")
     print("=" * 50)
+    logger.info("Server starting on http://127.0.0.1:5000")
     
     socketio.run(app, host='127.0.0.1', port=5000, debug=True, use_reloader=False)
 

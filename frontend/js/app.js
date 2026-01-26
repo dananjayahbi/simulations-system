@@ -168,9 +168,18 @@ async function fetchSystemInfo() {
 }
 
 async function launchSimulation(simId) {
+    // Always launch in embedded mode
+    const output = document.getElementById('terminal-output');
+    if (output) {
+        // Clear previous output
+        output.innerHTML = '';
+    }
+    
     try {
         const response = await fetch(`${API_BASE}/simulations/${simId}/launch`, {
-            method: 'POST'
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embedded: true })
         });
         const data = await response.json();
         
@@ -369,7 +378,7 @@ function updateTerminalStatus(running) {
             const sim = simulations.find(s => s.id === currentRunningSimId);
             simName.textContent = sim ? `Running: ${sim.name}` : 'Running...';
         } else {
-            simName.textContent = 'No simulation running';
+            simName.textContent = 'Terminal Output';
         }
     }
 }
@@ -391,8 +400,6 @@ async function launchEmbedded(simId) {
         
         if (data.status === 'success') {
             showToast(`Started ${data.message} in embedded mode`, 'success');
-            // Switch to terminal section
-            document.querySelector('.nav-item[data-section="terminal"]')?.click();
         } else {
             showToast(data.message, 'error');
         }
@@ -424,8 +431,8 @@ function clearTerminal() {
     if (output) {
         output.innerHTML = `
             <div class="terminal-welcome">
-                <p>👋 Welcome to the Loops Terminal</p>
-                <p>Launch a simulation with "embedded" mode to see output here.</p>
+                <p>👋 Welcome to Loops Terminal</p>
+                <p class="terminal-hint">Launch a simulation to see output here</p>
             </div>
         `;
     }

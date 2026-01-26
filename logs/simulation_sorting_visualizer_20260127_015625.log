@@ -1,0 +1,6 @@
+[stderr] Traceback (most recent call last):
+[stderr]   File "E:\test_repos\loops\simulations\sorting_visualizer\main.py", line 31, in <module>
+[stderr]     from visualizer import SortingVisualizer
+[stderr]   File "E:\test_repos\loops\simulations\sorting_visualizer\visualizer.py", line 2, in <module>
+[stderr]     import pygame
+[stderr] ModuleNotFoundError: No module named 'pygame'
