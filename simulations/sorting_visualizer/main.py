@@ -22,12 +22,36 @@ Features:
 - Frame saving for video rendering (saved to frames/ folder)
 """
 
+import os
+import sys
+
+# Add current directory to path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from visualizer import SortingVisualizer
+
+
+def load_runtime_settings():
+    """Load settings from control panel if available."""
+    settings_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "runtime_settings.py")
+    settings = {}
+    
+    if os.path.exists(settings_file):
+        try:
+            with open(settings_file, 'r') as f:
+                exec(f.read(), settings)
+            # Clean up the settings file after reading
+            os.remove(settings_file)
+        except Exception:
+            pass
+    
+    return settings
 
 
 def main():
     """Initialize and run the sorting visualizer."""
-    visualizer = SortingVisualizer()
+    settings = load_runtime_settings()
+    visualizer = SortingVisualizer(settings)
     visualizer.run()
 
 

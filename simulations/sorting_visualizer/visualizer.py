@@ -19,27 +19,47 @@ from sorting_algorithms import ALGORITHM_MAP
 class SortingVisualizer:
     """Main class for sorting algorithm visualization."""
     
-    def __init__(self):
+    def __init__(self, settings=None):
+        """
+        Initialize the visualizer.
+        
+        Args:
+            settings: Optional dict with runtime settings from control panel:
+                - ALGORITHM: Starting algorithm name
+                - SPEED: Starting speed
+                - NUM_BARS: Number of bars to display
+                - SAVE_FRAMES: Whether to save frames
+                - AUTO_START: Whether to auto-start sorting
+        """
         pygame.init()
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Sorting Algorithm Visualizer")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont('Arial', 24)
         
+        # Apply settings from control panel if provided
+        settings = settings or {}
+        self.num_bars = settings.get('NUM_BARS', NUM_BARS)
+        self.save_frames_enabled = settings.get('SAVE_FRAMES', SAVE_FRAMES)
+        self.auto_start = settings.get('AUTO_START', False)
+        
+        # Calculate bar width based on number of bars
+        self.bar_width = WINDOW_WIDTH // self.num_bars
+        
         # Initialize array with values
-        self.array = list(range(1, NUM_BARS + 1))
+        self.array = list(range(1, self.num_bars + 1))
         self.max_value = max(self.array)
         
         # State tracking
-        self.current_algorithm = "Bubble Sort"
-        self.algorithm_index = 0  # For cycling through algorithms
+        self.current_algorithm = settings.get('ALGORITHM', "Bubble Sort")
+        self.algorithm_index = ALGORITHMS.index(self.current_algorithm) if self.current_algorithm in ALGORITHMS else 0
         self.sorting = False
         self.sort_generator = None
         self.highlighted = (-1, -1)
         
         # Speed control
-        self.speed = DEFAULT_SPEED
-        self.in_menu = True  # Start in menu mode for algorithm selection
+        self.speed = settings.get('SPEED', DEFAULT_SPEED)
+        self.in_menu = not self.auto_start  # Skip menu if auto-starting
         
         # Recording
         self.recording = False
@@ -48,7 +68,7 @@ class SortingVisualizer:
     
     def _setup_frames_folder(self):
         """Create frames folder if it doesn't exist."""
-        if SAVE_FRAMES and not os.path.exists(FRAMES_FOLDER):
+        if self.save_frames_enabled and not os.path.exists(FRAMES_FOLDER):
             os.makedirs(FRAMES_FOLDER)
     
     def scramble_array(self):
@@ -64,12 +84,12 @@ class SortingVisualizer:
         algorithm_func = ALGORITHM_MAP.get(algorithm_name)
         if algorithm_func:
             self.sort_generator = algorithm_func(self.array.copy())
-            self.array = list(range(1, NUM_BARS + 1))
+            self.array = list(range(1, self.num_bars + 1))
             random.shuffle(self.array)
             self.sort_generator = algorithm_func(self.array)
             self.sorting = True
             self.frame_count = 0
-            self.recording = True  # Auto-start recording when sorting
+            self.recording = self.save_frames_enabled  # Start recording if enabled
     
     def draw_bars(self, for_recording=False):
         """Draw all bars with rainbow colors."""
@@ -86,7 +106,7 @@ class SortingVisualizer:
         
         for i, value in enumerate(self.array):
             # Calculate bar dimensions
-            x = i * BAR_WIDTH
+            x = i * self.bar_width
             height = int(value * bar_height_unit)
             y = WINDOW_HEIGHT - height - y_offset
             
@@ -97,7 +117,7 @@ class SortingVisualizer:
             if i in self.highlighted:
                 color = (255, 255, 255)  # White highlight
             
-            pygame.draw.rect(self.screen, color, (x, y, BAR_WIDTH - 1, height))
+            pygame.draw.rect(self.screen, color, (x, y, self.bar_width - 1, height))
     
     def draw_ui(self, show_controls=True):
         """Draw UI elements (algorithm name, controls info)."""
@@ -242,6 +262,10 @@ class SortingVisualizer:
         """Main visualization loop."""
         running = True
         self.scramble_array()  # Start with scrambled array
+        
+        # Auto-start if launched from control panel
+        if self.auto_start:
+            self.start_sorting(self.current_algorithm)
         
         while running:
             running = self.handle_events()
