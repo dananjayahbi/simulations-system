@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loops - Visualization System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">🔄</span>
+                <span class="logo-text">Loops</span>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-section="simulations">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Simulations</span>
+                </li>
+                <li class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="system-status">
+                <span class="status-dot online"></span>
+                <span>System Online</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 id="page-title">Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-icon" id="refresh-btn" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <div class="header-info">
+                    <span id="datetime"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="section active">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-simulations">0</span>
+                            <span class="stat-label">Simulations</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-frames">0</span>
+                            <span class="stat-label">Total Frames</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-python">-</span>
+                            <span class="stat-label">Python Version</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-platform">-</span>
+                            <span class="stat-label">Platform</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Launch Section -->
+                <div class="section-header">
+                    <h2>Quick Launch</h2>
+                    <p>Launch your simulations with a single click</p>
+                </div>
+                
+                <div class="simulations-grid" id="quick-launch-grid">
+                    <!-- Populated by JavaScript -->
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Loading simulations...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Simulations Section -->
+            <section id="simulations-section" class="section">
+                <div class="section-header">
+                    <h2>All Simulations</h2>
+                    <p>Manage and configure your visualization simulations</p>
+                </div>
+                
+                <div class="simulations-list" id="simulations-list">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="section">
+                <div class="section-header">
+                    <h2>System Settings</h2>
+                    <p>Configure the visualization system</p>
+                </div>
+                
+                <div class="settings-panel">
+                    <div class="setting-group">
+                        <h3>System Information</h3>
+                        <div class="setting-item">
+                            <span class="setting-label">Base Directory</span>
+                            <span class="setting-value" id="setting-base-dir">-</span>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">Python Version</span>
+                            <span class="setting-value" id="setting-python">-</span>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">Platform</span>
+                            <span class="setting-value" id="setting-platform">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h3>Server Status</h3>
+                        <div class="setting-item">
+                            <span class="setting-label">Backend Status</span>
+                            <span class="setting-value status-badge online">Online</span>
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label">API Endpoint</span>
+                            <span class="setting-value">http://127.0.0.1:5000/api</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Simulation Details</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modal-cancel">Close</button>
+                <button class="btn btn-primary" id="modal-launch">
+                    <i class="fas fa-rocket"></i> Launch
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

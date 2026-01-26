@@ -1,0 +1,9 @@
+{
+    "id": "sorting_visualizer",
+    "name": "Sorting Visualizer",
+    "description": "Visualize sorting algorithms with rainbow gradient bars. Includes Bubble Sort, Quick Sort, and Merge Sort with speed controls and frame saving.",
+    "icon": "📊",
+    "color": "#6366f1",
+    "version": "1.0.0",
+    "author": "Loops System"
+}
