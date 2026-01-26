@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -27,6 +28,10 @@
                 <li class="nav-item" data-section="simulations">
                     <i class="fas fa-play-circle"></i>
                     <span>Simulations</span>
+                </li>
+                <li class="nav-item" data-section="terminal">
+                    <i class="fas fa-terminal"></i>
+                    <span>Terminal</span>
                 </li>
                 <li class="nav-item" data-section="settings">
                     <i class="fas fa-cog"></i>
@@ -128,6 +133,44 @@
                 
                 <div class="simulations-list" id="simulations-list">
                     <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Terminal Section -->
+            <section id="terminal-section" class="section">
+                <div class="section-header">
+                    <h2>Embedded Terminal</h2>
+                    <p>View simulation output in real-time</p>
+                </div>
+                
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fas fa-terminal"></i>
+                            <span id="terminal-sim-name">No simulation running</span>
+                        </div>
+                        <div class="terminal-controls">
+                            <button class="btn btn-icon" id="terminal-clear" title="Clear Terminal">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                            <button class="btn btn-icon" id="terminal-stop" title="Stop Process" disabled>
+                                <i class="fas fa-stop"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="terminal-output">
+                        <div class="terminal-welcome">
+                            <p>👋 Welcome to the Loops Terminal</p>
+                            <p>Launch a simulation with "embedded" mode to see output here.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="terminal-quick-launch">
+                    <h3>Quick Launch (Embedded Mode)</h3>
+                    <div class="terminal-launch-grid" id="terminal-launch-grid">
+                        <!-- Populated by JavaScript -->
+                    </div>
                 </div>
             </section>
 

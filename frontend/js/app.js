@@ -134,6 +134,7 @@ async function fetchSimulations() {
             simulations = data.simulations;
             renderQuickLaunch();
             renderSimulationsList();
+            renderTerminalLaunchGrid();
             elements.statSimulations.textContent = simulations.length;
         }
     } catch (error) {
@@ -273,6 +274,25 @@ function renderSimulationsList() {
     });
 }
 
+// Render terminal quick launch buttons
+function renderTerminalLaunchGrid() {
+    const grid = document.getElementById('terminal-launch-grid');
+    if (!grid || simulations.length === 0) return;
+    
+    grid.innerHTML = simulations.map(sim => `
+        <button class="terminal-launch-btn" data-id="${sim.id}">
+            <span class="icon">${sim.icon || '🔄'}</span>
+            <span class="name">${sim.name}</span>
+        </button>
+    `).join('');
+    
+    grid.querySelectorAll('.terminal-launch-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            launchEmbedded(btn.dataset.id);
+        });
+    });
+}
+
 // Refresh button
 elements.refreshBtn.addEventListener('click', () => {
     elements.refreshBtn.querySelector('i').classList.add('fa-spin');
@@ -284,8 +304,149 @@ elements.refreshBtn.addEventListener('click', () => {
     });
 });
 
+// ============================================
+// EMBEDDED TERMINAL (WebSocket)
+// ============================================
+let socket = null;
+let currentRunningSimId = null;
+
+function initWebSocket() {
+    try {
+        socket = io('http://127.0.0.1:5000');
+        
+        socket.on('connect', () => {
+            console.log('WebSocket connected');
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('WebSocket disconnected');
+        });
+        
+        socket.on('terminal_output', (data) => {
+            appendTerminalOutput(data);
+        });
+    } catch (error) {
+        console.error('WebSocket init failed:', error);
+    }
+}
+
+function appendTerminalOutput(data) {
+    const output = document.getElementById('terminal-output');
+    if (!output) return;
+    
+    // Clear welcome message if present
+    const welcome = output.querySelector('.terminal-welcome');
+    if (welcome) welcome.remove();
+    
+    const line = document.createElement('div');
+    line.className = `terminal-line ${data.type}`;
+    line.textContent = data.data;
+    output.appendChild(line);
+    
+    // Auto scroll to bottom
+    output.scrollTop = output.scrollHeight;
+    
+    // Update running status
+    if (data.type === 'start') {
+        currentRunningSimId = data.sim_id;
+        updateTerminalStatus(true);
+    } else if (data.type === 'exit') {
+        currentRunningSimId = null;
+        updateTerminalStatus(false);
+    }
+}
+
+function updateTerminalStatus(running) {
+    const stopBtn = document.getElementById('terminal-stop');
+    const simName = document.getElementById('terminal-sim-name');
+    
+    if (stopBtn) {
+        stopBtn.disabled = !running;
+    }
+    
+    if (simName) {
+        if (running && currentRunningSimId) {
+            const sim = simulations.find(s => s.id === currentRunningSimId);
+            simName.textContent = sim ? `Running: ${sim.name}` : 'Running...';
+        } else {
+            simName.textContent = 'No simulation running';
+        }
+    }
+}
+
+async function launchEmbedded(simId) {
+    const output = document.getElementById('terminal-output');
+    if (output) {
+        // Clear previous output
+        output.innerHTML = '';
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/simulations/${simId}/launch`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embedded: true })
+        });
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showToast(`Started ${data.message} in embedded mode`, 'success');
+            // Switch to terminal section
+            document.querySelector('.nav-item[data-section="terminal"]')?.click();
+        } else {
+            showToast(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Failed to launch embedded:', error);
+        showToast('Failed to launch simulation', 'error');
+    }
+}
+
+async function stopEmbeddedSimulation() {
+    if (!currentRunningSimId) return;
+    
+    try {
+        const response = await fetch(`${API_BASE}/simulations/${currentRunningSimId}/stop`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showToast('Simulation stopped', 'success');
+        }
+    } catch (error) {
+        console.error('Failed to stop:', error);
+    }
+}
+
+function clearTerminal() {
+    const output = document.getElementById('terminal-output');
+    if (output) {
+        output.innerHTML = `
+            <div class="terminal-welcome">
+                <p>👋 Welcome to the Loops Terminal</p>
+                <p>Launch a simulation with "embedded" mode to see output here.</p>
+            </div>
+        `;
+    }
+}
+
+// Terminal controls
+document.addEventListener('DOMContentLoaded', () => {
+    const clearBtn = document.getElementById('terminal-clear');
+    const stopBtn = document.getElementById('terminal-stop');
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearTerminal);
+    }
+    if (stopBtn) {
+        stopBtn.addEventListener('click', stopEmbeddedSimulation);
+    }
+});
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     fetchSimulations();
     fetchSystemInfo();
+    initWebSocket();
 });

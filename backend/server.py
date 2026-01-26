@@ -8,14 +8,18 @@ A Flask-based backend server that:
 - Serves the frontend dashboard
 - Provides API endpoints for simulation management
 - Launches micro app control panels
+- Streams terminal output via WebSocket
 """
 
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 import os
 import sys
 import subprocess
 import json
+import threading
+import queue
 from pathlib import Path
 
 # Setup paths
@@ -28,9 +32,13 @@ sys.path.insert(0, str(BASE_DIR))
 
 app = Flask(__name__, static_folder=str(FRONTEND_DIR))
 CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 # Registry of available simulations
 SIMULATIONS_REGISTRY = {}
+
+# Store running processes
+RUNNING_PROCESSES = {}
 
 
 def discover_simulations():
@@ -72,6 +80,48 @@ def discover_simulations():
                 simulations[item.name] = metadata
     
     return simulations
+
+
+def stream_process_output(process, sim_id):
+    """Stream process output to WebSocket clients."""
+    def read_stream(stream, stream_type):
+        try:
+            for line in iter(stream.readline, b''):
+                if line:
+                    text = line.decode('utf-8', errors='replace').rstrip()
+                    socketio.emit('terminal_output', {
+                        'sim_id': sim_id,
+                        'type': stream_type,
+                        'data': text
+                    })
+        except Exception as e:
+            socketio.emit('terminal_output', {
+                'sim_id': sim_id,
+                'type': 'error',
+                'data': str(e)
+            })
+    
+    # Start threads to read stdout and stderr
+    stdout_thread = threading.Thread(target=read_stream, args=(process.stdout, 'stdout'))
+    stderr_thread = threading.Thread(target=read_stream, args=(process.stderr, 'stderr'))
+    stdout_thread.daemon = True
+    stderr_thread.daemon = True
+    stdout_thread.start()
+    stderr_thread.start()
+    
+    # Wait for process to complete
+    process.wait()
+    
+    # Notify completion
+    socketio.emit('terminal_output', {
+        'sim_id': sim_id,
+        'type': 'exit',
+        'data': f'Process exited with code {process.returncode}'
+    })
+    
+    # Cleanup
+    if sim_id in RUNNING_PROCESSES:
+        del RUNNING_PROCESSES[sim_id]
 
 
 @app.route('/')
@@ -125,26 +175,76 @@ def launch_simulation(sim_id):
             "message": "No launchable file found"
         }), 400
     
+    # Check if embedded terminal is requested
+    use_embedded = False
     try:
-        # Launch in a new process (non-blocking)
-        if sys.platform == 'win32':
-            # Windows: Use pythonw for GUI apps to avoid console
-            subprocess.Popen(
-                [sys.executable, str(launch_file)],
-                creationflags=subprocess.CREATE_NEW_CONSOLE
+        data = request.get_json(silent=True) or {}
+        use_embedded = data.get('embedded', False)
+    except:
+        pass
+    
+    try:
+        if use_embedded:
+            # Launch with output streaming
+            process = subprocess.Popen(
+                [sys.executable, '-u', str(launch_file)],  # -u for unbuffered output
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=str(sim_path)
             )
+            
+            RUNNING_PROCESSES[sim_id] = process
+            
+            # Start streaming thread
+            stream_thread = threading.Thread(
+                target=stream_process_output,
+                args=(process, sim_id)
+            )
+            stream_thread.daemon = True
+            stream_thread.start()
+            
+            socketio.emit('terminal_output', {
+                'sim_id': sim_id,
+                'type': 'start',
+                'data': f'Starting {sim["name"]}...'
+            })
         else:
-            subprocess.Popen([sys.executable, str(launch_file)])
+            # Launch in a new window (original behavior)
+            if sys.platform == 'win32':
+                subprocess.Popen(
+                    [sys.executable, str(launch_file)],
+                    creationflags=subprocess.CREATE_NEW_CONSOLE
+                )
+            else:
+                subprocess.Popen([sys.executable, str(launch_file)])
         
         return jsonify({
             "status": "success",
-            "message": f"Launched {sim['name']}"
+            "message": f"Launched {sim['name']}",
+            "embedded": use_embedded
         })
     except Exception as e:
         return jsonify({
             "status": "error",
             "message": str(e)
         }), 500
+
+
+@app.route('/api/simulations/<sim_id>/stop', methods=['POST'])
+def stop_simulation(sim_id):
+    """Stop a running simulation."""
+    if sim_id in RUNNING_PROCESSES:
+        process = RUNNING_PROCESSES[sim_id]
+        process.terminate()
+        del RUNNING_PROCESSES[sim_id]
+        return jsonify({
+            "status": "success",
+            "message": f"Stopped {sim_id}"
+        })
+    return jsonify({
+        "status": "error",
+        "message": "Simulation not running"
+    }), 400
 
 
 @app.route('/api/simulations/<sim_id>/info', methods=['GET'])
@@ -176,7 +276,8 @@ def get_simulation_info(sim_id):
         "stats": {
             "frames": frame_count,
             "comparison_frames": comparison_count
-        }
+        },
+        "running": sim_id in RUNNING_PROCESSES
     })
 
 
@@ -194,6 +295,19 @@ def get_system_info():
             "simulations_count": len(SIMULATIONS_REGISTRY) if SIMULATIONS_REGISTRY else 0
         }
     })
+
+
+# WebSocket Events
+@socketio.on('connect')
+def handle_connect():
+    """Handle client connection."""
+    print(f"Client connected")
+
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    """Handle client disconnection."""
+    print(f"Client disconnected")
 
 
 def main():
@@ -215,10 +329,11 @@ def main():
     
     print("-" * 50)
     print("🌐 Server starting on http://127.0.0.1:5000")
+    print("📡 WebSocket enabled for terminal streaming")
     print("   Press Ctrl+C to stop")
     print("=" * 50)
     
-    app.run(host='127.0.0.1', port=5000, debug=True, use_reloader=False)
+    socketio.run(app, host='127.0.0.1', port=5000, debug=True, use_reloader=False)
 
 
 if __name__ == "__main__":
