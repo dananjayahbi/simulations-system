@@ -67,30 +67,134 @@ class VideoGenerator:
         'lossless': {'crf': 0, 'preset': 'veryslow', 'bitrate': None}
     }
     
-    def __init__(self, output_dir: Optional[Path] = None, ffmpeg_path: str = 'ffmpeg'):
+    def __init__(self, output_dir: Optional[Path] = None, ffmpeg_path: Optional[str] = None):
         """
         Initialize the video generator.
         
         Args:
             output_dir: Custom output directory (defaults to BASE_DIR/output/videos)
-            ffmpeg_path: Path to FFmpeg executable (defaults to 'ffmpeg' in PATH)
+            ffmpeg_path: Path to FFmpeg executable (if None, auto-detects)
         """
         self.output_dir = Path(output_dir) if output_dir else OUTPUT_DIR
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.ffmpeg_path = ffmpeg_path
+        
+        # Find FFmpeg - auto-detect if not provided
+        if ffmpeg_path:
+            self.ffmpeg_path = ffmpeg_path
+        else:
+            self.ffmpeg_path = self._find_ffmpeg()
         
         # Check if FFmpeg is available
         self._check_ffmpeg()
     
+    def _find_ffmpeg(self) -> str:
+        """Find FFmpeg executable by checking common locations."""
+        import platform
+        import shutil
+        
+        # First try: Use shutil.which to find in PATH
+        ffmpeg_in_path = shutil.which('ffmpeg')
+        if ffmpeg_in_path:
+            logger.info(f"Found FFmpeg in PATH: {ffmpeg_in_path}")
+            return ffmpeg_in_path
+        
+        # Common locations to check on Windows
+        if platform.system() == 'Windows':
+            common_paths = [
+                # User's specific installation
+                r'C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe',
+                # Common installation locations
+                r'C:\ffmpeg\bin\ffmpeg.exe',
+                r'C:\Program Files\ffmpeg\bin\ffmpeg.exe',
+                r'C:\Program Files (x86)\ffmpeg\bin\ffmpeg.exe',
+                # Chocolatey installation
+                r'C:\ProgramData\chocolatey\bin\ffmpeg.exe',
+                # Scoop installation
+                os.path.expanduser(r'~\scoop\apps\ffmpeg\current\bin\ffmpeg.exe'),
+                # Portable in user folder
+                os.path.expanduser(r'~\ffmpeg\bin\ffmpeg.exe'),
+                # Common developer locations
+                r'D:\ffmpeg\bin\ffmpeg.exe',
+                r'E:\ffmpeg\bin\ffmpeg.exe',
+            ]
+            
+            # Also check environment variables
+            for env_var in ['FFMPEG_HOME', 'FFMPEG_PATH']:
+                env_path = os.environ.get(env_var)
+                if env_path:
+                    ffmpeg_exe = Path(env_path) / 'bin' / 'ffmpeg.exe'
+                    if ffmpeg_exe.exists():
+                        logger.info(f"Found FFmpeg via {env_var}: {ffmpeg_exe}")
+                        return str(ffmpeg_exe)
+                    # Also check if path points directly to ffmpeg
+                    if Path(env_path).exists() and Path(env_path).name == 'ffmpeg.exe':
+                        logger.info(f"Found FFmpeg via {env_var}: {env_path}")
+                        return env_path
+            
+            # Check common paths
+            for path in common_paths:
+                if os.path.exists(path):
+                    logger.info(f"Found FFmpeg at: {path}")
+                    return path
+            
+            # Try to find in Program Files dynamically
+            for base in [r'C:\Program Files', r'C:\Program Files (x86)']:
+                if os.path.exists(base):
+                    for item in os.listdir(base):
+                        if 'ffmpeg' in item.lower():
+                            ffmpeg_exe = os.path.join(base, item, 'bin', 'ffmpeg.exe')
+                            if os.path.exists(ffmpeg_exe):
+                                logger.info(f"Found FFmpeg at: {ffmpeg_exe}")
+                                return ffmpeg_exe
+            
+            # Also search root of C:\ for ffmpeg folders (common for portable installs)
+            try:
+                for item in os.listdir(r'C:\\'):
+                    if 'ffmpeg' in item.lower():
+                        ffmpeg_exe = os.path.join(r'C:\\', item, 'bin', 'ffmpeg.exe')
+                        if os.path.exists(ffmpeg_exe):
+                            logger.info(f"Found FFmpeg at: {ffmpeg_exe}")
+                            return ffmpeg_exe
+            except (PermissionError, OSError):
+                pass
+                
+        else:
+            # Unix-like systems
+            common_paths = [
+                '/usr/bin/ffmpeg',
+                '/usr/local/bin/ffmpeg',
+                '/opt/homebrew/bin/ffmpeg',  # macOS with Homebrew
+            ]
+            
+            for path in common_paths:
+                if os.path.exists(path):
+                    logger.info(f"Found FFmpeg at: {path}")
+                    return path
+        
+        # Fallback to just 'ffmpeg' and hope it's in PATH
+        logger.warning("FFmpeg not found in common locations, defaulting to 'ffmpeg'")
+        return 'ffmpeg'
+    
     def _check_ffmpeg(self) -> bool:
         """Check if FFmpeg is available and log version."""
         try:
-            result = subprocess.run(
-                [self.ffmpeg_path, '-version'],
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
+            # Use shell=True on Windows to ensure PATH is properly resolved
+            if sys.platform == 'win32':
+                result = subprocess.run(
+                    [self.ffmpeg_path, '-version'],
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                    shell=False,  # Don't use shell, use full path
+                    creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, 'CREATE_NO_WINDOW') else 0
+                )
+            else:
+                result = subprocess.run(
+                    [self.ffmpeg_path, '-version'],
+                    capture_output=True,
+                    text=True,
+                    timeout=10
+                )
             if result.returncode == 0:
                 version_line = result.stdout.split('\n')[0]
                 logger.info(f"FFmpeg available: {version_line}")
@@ -107,6 +211,28 @@ class VideoGenerator:
         except Exception as e:
             logger.error(f"Error checking FFmpeg: {e}")
             return False
+    
+    def _find_ffprobe(self) -> str:
+        """Find FFprobe executable (usually alongside FFmpeg)."""
+        import shutil
+        
+        # If ffmpeg_path is set, ffprobe is likely in the same directory
+        if self.ffmpeg_path and os.path.exists(self.ffmpeg_path):
+            ffmpeg_dir = os.path.dirname(self.ffmpeg_path)
+            if sys.platform == 'win32':
+                ffprobe_path = os.path.join(ffmpeg_dir, 'ffprobe.exe')
+            else:
+                ffprobe_path = os.path.join(ffmpeg_dir, 'ffprobe')
+            
+            if os.path.exists(ffprobe_path):
+                return ffprobe_path
+        
+        # Try shutil.which
+        ffprobe_in_path = shutil.which('ffprobe')
+        if ffprobe_in_path:
+            return ffprobe_in_path
+        
+        return 'ffprobe'
     
     def _get_frame_info(self, frame_folder: Path) -> Dict:
         """
@@ -279,13 +405,18 @@ class VideoGenerator:
         logger.info(f"FFmpeg command: {' '.join(cmd)}")
         
         try:
-            # Run FFmpeg
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=3600  # 1 hour timeout
-            )
+            # Run FFmpeg with proper Windows handling
+            run_kwargs = {
+                'capture_output': True,
+                'text': True,
+                'timeout': 3600  # 1 hour timeout
+            }
+            
+            # On Windows, add creation flags to hide console window
+            if sys.platform == 'win32' and hasattr(subprocess, 'CREATE_NO_WINDOW'):
+                run_kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+            
+            result = subprocess.run(cmd, **run_kwargs)
             
             # Clean up file list
             if file_list_path.exists():
@@ -375,7 +506,17 @@ class VideoGenerator:
         ]
         
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
+            # Run FFmpeg with proper Windows handling
+            run_kwargs = {
+                'capture_output': True,
+                'text': True,
+                'timeout': 3600
+            }
+            
+            if sys.platform == 'win32' and hasattr(subprocess, 'CREATE_NO_WINDOW'):
+                run_kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+            
+            result = subprocess.run(cmd, **run_kwargs)
             
             # Clean up
             if file_list_path.exists():
@@ -399,9 +540,12 @@ class VideoGenerator:
             raise VideoGeneratorError(f"Video file not found: {video_path}")
         
         try:
+            # Find ffprobe (usually in same directory as ffmpeg)
+            ffprobe_path = self._find_ffprobe()
+            
             # Use ffprobe to get video info
             cmd = [
-                'ffprobe',
+                ffprobe_path,
                 '-v', 'quiet',
                 '-print_format', 'json',
                 '-show_format',
@@ -409,7 +553,11 @@ class VideoGenerator:
                 str(video_path)
             ]
             
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            run_kwargs = {'capture_output': True, 'text': True}
+            if sys.platform == 'win32' and hasattr(subprocess, 'CREATE_NO_WINDOW'):
+                run_kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+            
+            result = subprocess.run(cmd, **run_kwargs)
             
             if result.returncode == 0:
                 return json.loads(result.stdout)

@@ -10,6 +10,7 @@ Features:
 - Select sorting algorithm (single or comparison mode)
 - Adjust speed and bar count settings
 - View and manage frames for both single and comparison modes
+- Generate videos from saved frames
 - Launch simulator in separate window
 """
 
@@ -24,6 +25,9 @@ import threading
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 FRAMES_FOLDER = os.path.join(SCRIPT_DIR, "frames")
 COMPARISON_FRAMES_FOLDER = os.path.join(SCRIPT_DIR, "comparison_frames")
+
+# Add parent directories to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(SCRIPT_DIR)))
 
 # Sorting algorithms
 ALGORITHMS = ["Bubble Sort", "Quick Sort", "Merge Sort"]
@@ -187,13 +191,23 @@ class ControlPanel:
         self.frame_count_label = ttk.Label(count_row, text="0", font=('Arial', 12, 'bold'))
         self.frame_count_label.pack(side=tk.RIGHT)
         
-        # Buttons
+        # Buttons row 1
         btn_row = ttk.Frame(frame)
         btn_row.pack(fill=tk.X, pady=5)
         
         ttk.Button(btn_row, text="🔄 Refresh", command=self._update_frame_count).pack(side=tk.LEFT, padx=2)
         ttk.Button(btn_row, text="🗑️ Clear", command=self._clear_frames).pack(side=tk.LEFT, padx=2)
         ttk.Button(btn_row, text="📂 Open", command=self._open_frames_folder).pack(side=tk.LEFT, padx=2)
+        
+        # Video generation button
+        video_btn = tk.Button(
+            frame,
+            text="🎬 Generate Video",
+            bg='#2196F3', fg='white',
+            activebackground='#1976D2',
+            command=lambda: self._generate_video(FRAMES_FOLDER, "single")
+        )
+        video_btn.pack(fill=tk.X, pady=5)
     
     def _create_comparison_frames_section(self, parent):
         """Create comparison frames section."""
@@ -207,13 +221,23 @@ class ControlPanel:
         self.comparison_frame_count_label = ttk.Label(count_row, text="0", font=('Arial', 12, 'bold'))
         self.comparison_frame_count_label.pack(side=tk.RIGHT)
         
-        # Buttons
+        # Buttons row 1
         btn_row = ttk.Frame(frame)
         btn_row.pack(fill=tk.X, pady=5)
         
         ttk.Button(btn_row, text="🔄 Refresh", command=self._update_comparison_frame_count).pack(side=tk.LEFT, padx=2)
         ttk.Button(btn_row, text="🗑️ Clear", command=self._clear_comparison_frames).pack(side=tk.LEFT, padx=2)
         ttk.Button(btn_row, text="📂 Open", command=self._open_comparison_frames_folder).pack(side=tk.LEFT, padx=2)
+        
+        # Video generation button
+        video_btn = tk.Button(
+            frame,
+            text="🎬 Generate Video",
+            bg='#2196F3', fg='white',
+            activebackground='#1976D2',
+            command=lambda: self._generate_video(COMPARISON_FRAMES_FOLDER, "comparison")
+        )
+        video_btn.pack(fill=tk.X, pady=5)
     
     def _create_run_button(self, parent):
         """Create run simulation button."""
@@ -348,6 +372,117 @@ class ControlPanel:
         
         thread = threading.Thread(target=run_visualizer, daemon=True)
         thread.start()
+    
+    def _generate_video(self, frame_folder, video_type):
+        """Generate video from frames using the global video generator service."""
+        # Check if folder exists and has frames
+        if not os.path.exists(frame_folder):
+            messagebox.showwarning("Warning", "Frame folder does not exist.")
+            return
+        
+        frame_count = len([f for f in os.listdir(frame_folder) if f.endswith('.png')])
+        if frame_count == 0:
+            messagebox.showwarning("Warning", "No frames to generate video from.\nRun a simulation first with 'Save frames' enabled.")
+            return
+        
+        # Ask user for FPS
+        fps_dialog = tk.Toplevel(self.root)
+        fps_dialog.title("Video Settings")
+        fps_dialog.geometry("300x200")
+        fps_dialog.resizable(False, False)
+        fps_dialog.transient(self.root)
+        fps_dialog.grab_set()
+        
+        ttk.Label(fps_dialog, text="Video Generation Settings", font=('Arial', 12, 'bold')).pack(pady=10)
+        
+        # FPS
+        fps_frame = ttk.Frame(fps_dialog)
+        fps_frame.pack(fill=tk.X, padx=20, pady=5)
+        ttk.Label(fps_frame, text="FPS:").pack(side=tk.LEFT)
+        fps_var = tk.IntVar(value=60)
+        fps_entry = ttk.Spinbox(fps_frame, from_=15, to=120, textvariable=fps_var, width=10)
+        fps_entry.pack(side=tk.RIGHT)
+        
+        # Quality
+        quality_frame = ttk.Frame(fps_dialog)
+        quality_frame.pack(fill=tk.X, padx=20, pady=5)
+        ttk.Label(quality_frame, text="Quality:").pack(side=tk.LEFT)
+        quality_var = tk.StringVar(value="high")
+        quality_combo = ttk.Combobox(quality_frame, textvariable=quality_var, 
+                                      values=["low", "medium", "high", "ultra"], state="readonly", width=10)
+        quality_combo.pack(side=tk.RIGHT)
+        
+        ttk.Label(fps_dialog, text=f"Frames: {frame_count}", font=('Arial', 10)).pack(pady=5)
+        
+        def do_generate():
+            fps_dialog.destroy()
+            self._do_video_generation(frame_folder, video_type, fps_var.get(), quality_var.get())
+        
+        btn_frame = ttk.Frame(fps_dialog)
+        btn_frame.pack(pady=15)
+        ttk.Button(btn_frame, text="Cancel", command=fps_dialog.destroy).pack(side=tk.LEFT, padx=5)
+        ttk.Button(btn_frame, text="Generate", command=do_generate).pack(side=tk.LEFT, padx=5)
+    
+    def _do_video_generation(self, frame_folder, video_type, fps, quality):
+        """Actually perform video generation in a separate thread."""
+        # Show progress dialog
+        progress_dialog = tk.Toplevel(self.root)
+        progress_dialog.title("Generating Video...")
+        progress_dialog.geometry("350x120")
+        progress_dialog.resizable(False, False)
+        progress_dialog.transient(self.root)
+        
+        ttk.Label(progress_dialog, text="🎬 Generating video...", font=('Arial', 12)).pack(pady=15)
+        progress = ttk.Progressbar(progress_dialog, mode='indeterminate')
+        progress.pack(fill=tk.X, padx=30, pady=10)
+        progress.start(10)
+        
+        status_label = ttk.Label(progress_dialog, text="Processing frames...")
+        status_label.pack()
+        
+        def generate():
+            try:
+                from shared.video_generator import VideoGenerator
+                
+                generator = VideoGenerator()
+                
+                # Generate output name based on type and algorithm
+                from datetime import datetime
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                
+                if video_type == "single":
+                    algo = self.algorithm_var.get().replace(" ", "_").lower()
+                    output_name = f"sorting_{algo}_{timestamp}"
+                else:
+                    output_name = f"sorting_comparison_{timestamp}"
+                
+                output_path = generator.generate_video(
+                    frame_folder=frame_folder,
+                    output_name=output_name,
+                    fps=fps,
+                    quality=quality
+                )
+                
+                # Close progress and show success
+                self.root.after(0, progress_dialog.destroy)
+                self.root.after(0, lambda: self._show_video_success(output_path))
+                
+            except Exception as e:
+                self.root.after(0, progress_dialog.destroy)
+                self.root.after(0, lambda: messagebox.showerror("Error", f"Video generation failed:\n{str(e)}"))
+        
+        thread = threading.Thread(target=generate, daemon=True)
+        thread.start()
+    
+    def _show_video_success(self, output_path):
+        """Show success dialog with option to open video."""
+        result = messagebox.askyesno(
+            "Video Generated!",
+            f"Video generated successfully!\n\n{output_path}\n\nOpen containing folder?"
+        )
+        if result:
+            folder = os.path.dirname(str(output_path))
+            self._open_folder(folder)
     
     def run(self):
         """Start the control panel."""

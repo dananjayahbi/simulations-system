@@ -135,3 +135,36 @@
 2026-01-27 02:10:24,688 | INFO | 127.0.0.1 - - [27/Jan/2026 02:10:24] "POST /api/simulations/sorting_visualizer/launch HTTP/1.1" 200 -
 2026-01-27 02:10:24,689 | INFO | Simulation log: E:\test_repos\loops\logs\simulation_sorting_visualizer_20260127_021024.log
 2026-01-27 02:12:42,341 | INFO | Simulation sorting_visualizer: Process exited with code 0
+2026-01-27 02:14:24,793 | INFO | ==================================================
+2026-01-27 02:14:24,793 | INFO | Loops Visualization System - Starting
+2026-01-27 02:14:24,793 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 02:14:24,794 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 02:14:24,795 | INFO | Found 1 simulation(s)
+2026-01-27 02:14:24,795 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 02:14:24,796 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 02:14:24,846 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 02:14:24,846 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 02:14:26,598 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:26] "[36mGET / HTTP/1.1[0m" 304 -
+2026-01-27 02:14:26,626 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:26] "[36mGET /css/style.css HTTP/1.1[0m" 304 -
+2026-01-27 02:14:26,631 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:26] "[36mGET /js/app.js HTTP/1.1[0m" 304 -
+2026-01-27 02:14:26,902 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:26] "GET /api/simulations HTTP/1.1" 200 -
+2026-01-27 02:14:26,904 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:26] "GET /socket.io/?EIO=4&transport=polling&t=Ply3FUI HTTP/1.1" 200 -
+2026-01-27 02:14:26,999 | INFO | Client connected via WebSocket
+2026-01-27 02:14:26,999 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:26] "POST /socket.io/?EIO=4&transport=polling&t=Ply3FVo&sid=dn_kcpCSw9iaHxLQAAAA HTTP/1.1" 200 -
+2026-01-27 02:14:27,002 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:27] "GET /socket.io/?EIO=4&transport=polling&t=Ply3FVp&sid=dn_kcpCSw9iaHxLQAAAA HTTP/1.1" 200 -
+2026-01-27 02:14:27,018 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:27] "GET /api/system/info HTTP/1.1" 200 -
+2026-01-27 02:14:27,087 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:27] "GET /socket.io/?EIO=4&transport=polling&t=Ply3FXA&sid=dn_kcpCSw9iaHxLQAAAA HTTP/1.1" 200 -
+2026-01-27 02:14:27,113 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:27] "GET /socket.io/?EIO=4&transport=polling&t=Ply3FXY&sid=dn_kcpCSw9iaHxLQAAAA HTTP/1.1" 200 -
+2026-01-27 02:14:27,180 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:27] "GET /socket.io/?EIO=4&transport=polling&t=Ply3FYb HTTP/1.1" 200 -
+2026-01-27 02:14:27,202 | INFO | Client connected via WebSocket
+2026-01-27 02:14:27,202 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:27] "POST /socket.io/?EIO=4&transport=polling&t=Ply3FYr&sid=BIA9A04INRrp2LIBAAAC HTTP/1.1" 200 -
+2026-01-27 02:14:27,207 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:27] "GET /socket.io/?EIO=4&transport=polling&t=Ply3FYs&sid=BIA9A04INRrp2LIBAAAC HTTP/1.1" 200 -
+2026-01-27 02:14:28,238 | INFO | Client disconnected from WebSocket
+2026-01-27 02:14:28,238 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:28] "GET /socket.io/?EIO=4&transport=websocket&sid=BIA9A04INRrp2LIBAAAC HTTP/1.1" 200 -
+2026-01-27 02:14:30,306 | INFO | Launching simulation: Sorting Visualizer (embedded=True)
+2026-01-27 02:14:30,306 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 02:14:30,317 | INFO | Started streaming output for simulation: sorting_visualizer
+2026-01-27 02:14:30,317 | INFO | 127.0.0.1 - - [27/Jan/2026 02:14:30] "POST /api/simulations/sorting_visualizer/launch HTTP/1.1" 200 -
+2026-01-27 02:14:30,318 | INFO | Simulation log: E:\test_repos\loops\logs\simulation_sorting_visualizer_20260127_021430.log
+2026-01-27 02:17:17,472 | INFO | Simulation sorting_visualizer: Process exited with code 3221225786
