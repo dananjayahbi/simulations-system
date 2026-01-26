@@ -2,6 +2,10 @@
 import pygame
 import random
 import os
+import sys
+
+# Add current directory to path for direct execution
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config import (
     WINDOW_WIDTH, WINDOW_HEIGHT, FPS, NUM_BARS, BAR_WIDTH,
@@ -37,7 +41,8 @@ class SortingVisualizer:
         self.speed = DEFAULT_SPEED
         self.in_menu = True  # Start in menu mode for algorithm selection
         
-        # Frame saving
+        # Recording
+        self.recording = False
         self.frame_count = 0
         self._setup_frames_folder()
     
@@ -64,6 +69,7 @@ class SortingVisualizer:
             self.sort_generator = algorithm_func(self.array)
             self.sorting = True
             self.frame_count = 0
+            self.recording = True  # Auto-start recording when sorting
     
     def draw_bars(self):
         """Draw all bars with rainbow colors."""
@@ -94,6 +100,11 @@ class SortingVisualizer:
         
         speed_text = self.font.render(f"Speed: {self.speed}x", True, (100, 255, 100))
         self.screen.blit(speed_text, (10, 40))
+        
+        # Recording indicator
+        if self.recording:
+            rec_text = self.font.render("● REC", True, (255, 50, 50))
+            self.screen.blit(rec_text, (WINDOW_WIDTH - 80, 10))
         
         # Controls
         if self.in_menu:
@@ -138,7 +149,7 @@ class SortingVisualizer:
     
     def save_frame(self):
         """Save current frame as PNG."""
-        if SAVE_FRAMES:
+        if self.recording and SAVE_FRAMES:
             filename = os.path.join(FRAMES_FOLDER, f"frame_{self.frame_count:06d}.png")
             pygame.image.save(self.screen, filename)
             self.frame_count += 1
@@ -152,6 +163,7 @@ class SortingVisualizer:
                     self.highlighted = (idx1, idx2)
                 except StopIteration:
                     self.sorting = False
+                    self.recording = False  # Stop recording when done
                     self.highlighted = (-1, -1)
                     break
     
@@ -168,6 +180,7 @@ class SortingVisualizer:
                     else:
                         self.in_menu = True
                         self.sorting = False
+                        self.recording = False
                 
                 # Speed controls (work anytime)
                 elif event.key in (pygame.K_PLUS, pygame.K_EQUALS, pygame.K_KP_PLUS):
@@ -228,8 +241,8 @@ class SortingVisualizer:
             if self.in_menu:
                 self.draw_menu()
             
-            # Save frame if sorting
-            if self.sorting:
+            # Save frame if recording
+            if self.recording:
                 self.save_frame()
             
             pygame.display.flip()
