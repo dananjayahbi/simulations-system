@@ -1,5 +1,0 @@
-ALGORITHM = "Merge Sort"
-SPEED = 5
-NUM_BARS = 200
-SAVE_FRAMES = True
-AUTO_START = True

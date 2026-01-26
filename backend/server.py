@@ -29,6 +29,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
 SIMULATIONS_DIR = BASE_DIR / "simulations"
 LOGS_DIR = BASE_DIR / "logs"
+VENV_DIR = BASE_DIR / "venv"
+
+# Determine the Python executable to use (prefer venv if exists)
+if sys.platform == 'win32':
+    VENV_PYTHON = VENV_DIR / "Scripts" / "python.exe"
+else:
+    VENV_PYTHON = VENV_DIR / "bin" / "python"
+
+# Use venv Python if it exists, otherwise use system Python
+PYTHON_EXECUTABLE = str(VENV_PYTHON) if VENV_PYTHON.exists() else sys.executable
 
 # Create logs directory if it doesn't exist
 LOGS_DIR.mkdir(exist_ok=True)
@@ -225,11 +235,12 @@ def launch_simulation(sim_id):
     
     try:
         logger.info(f"Launching simulation: {sim['name']} (embedded={use_embedded})")
+        logger.info(f"Using Python: {PYTHON_EXECUTABLE}")
         
         if use_embedded:
-            # Launch with output streaming
+            # Launch with output streaming using venv Python
             process = subprocess.Popen(
-                [sys.executable, '-u', str(launch_file)],  # -u for unbuffered output
+                [PYTHON_EXECUTABLE, '-u', str(launch_file)],  # -u for unbuffered output
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 cwd=str(sim_path)
@@ -251,14 +262,14 @@ def launch_simulation(sim_id):
                 'data': f'Starting {sim["name"]}...'
             })
         else:
-            # Launch in a new window (original behavior)
+            # Launch in a new window using venv Python
             if sys.platform == 'win32':
                 subprocess.Popen(
-                    [sys.executable, str(launch_file)],
+                    [PYTHON_EXECUTABLE, str(launch_file)],
                     creationflags=subprocess.CREATE_NEW_CONSOLE
                 )
             else:
-                subprocess.Popen([sys.executable, str(launch_file)])
+                subprocess.Popen([PYTHON_EXECUTABLE, str(launch_file)])
         
         return jsonify({
             "status": "success",
@@ -364,11 +375,13 @@ def main():
     print(f"🌐 Frontend: {FRONTEND_DIR}")
     print(f"🎮 Simulations: {SIMULATIONS_DIR}")
     print(f"📝 Logs: {LOGS_DIR}")
+    print(f"🐍 Python: {PYTHON_EXECUTABLE}")
     print("-" * 50)
     
     logger.info("=" * 50)
     logger.info("Loops Visualization System - Starting")
     logger.info(f"Base Directory: {BASE_DIR}")
+    logger.info(f"Using Python: {PYTHON_EXECUTABLE}")
     
     # Discover simulations on startup
     global SIMULATIONS_REGISTRY
