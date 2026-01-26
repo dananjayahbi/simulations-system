@@ -587,6 +587,41 @@ def open_video_folder():
         }), 500
 
 
+@app.route('/api/video/thumbnail/<path:video_name>', methods=['GET'])
+def get_video_thumbnail(video_name):
+    """Get thumbnail image for a video (extracts 5th frame)."""
+    try:
+        from flask import send_file
+        from shared.video_generator import VideoGenerator
+        
+        # Initialize video generator
+        generator = VideoGenerator(output_dir=BASE_DIR / "output" / "videos")
+        
+        # Generate or get cached thumbnail
+        thumb_path = generator.generate_thumbnail(video_name, frame_number=5)
+        
+        if thumb_path and thumb_path.exists():
+            return send_file(
+                thumb_path,
+                mimetype='image/jpeg',
+                as_attachment=False,
+                download_name=thumb_path.name
+            )
+        else:
+            # Return a default placeholder (404)
+            return jsonify({
+                "status": "error",
+                "message": "Could not generate thumbnail"
+            }), 404
+            
+    except Exception as e:
+        logger.error(f"Error getting thumbnail for {video_name}: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
 @app.route('/api/simulations/<sim_id>/frames', methods=['GET'])
 def get_simulation_frames(sim_id):
     """Get list of frame folders for a simulation."""

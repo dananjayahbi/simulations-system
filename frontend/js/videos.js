@@ -11,10 +11,7 @@ const videoElements = {
     videoPlayer: null,
     videoSource: null,
     videoModalTitle: null,
-    videoInfo: null,
     videoModalClose: null,
-    videoModalCloseBtn: null,
-    videoOpenFolder: null,
     refreshOutputs: null
 };
 
@@ -24,26 +21,17 @@ function initVideoElements() {
     videoElements.videoPlayer = document.getElementById('video-player');
     videoElements.videoSource = document.getElementById('video-source');
     videoElements.videoModalTitle = document.getElementById('video-modal-title');
-    videoElements.videoInfo = document.getElementById('video-info');
     videoElements.videoModalClose = document.getElementById('video-modal-close');
-    videoElements.videoModalCloseBtn = document.getElementById('video-modal-close-btn');
-    videoElements.videoOpenFolder = document.getElementById('video-open-folder');
     videoElements.refreshOutputs = document.getElementById('refresh-outputs');
     
     // Video modal event listeners
     if (videoElements.videoModalClose) {
         videoElements.videoModalClose.addEventListener('click', closeVideoModal);
     }
-    if (videoElements.videoModalCloseBtn) {
-        videoElements.videoModalCloseBtn.addEventListener('click', closeVideoModal);
-    }
     if (videoElements.videoModal) {
         videoElements.videoModal.addEventListener('click', (e) => {
             if (e.target === videoElements.videoModal) closeVideoModal();
         });
-    }
-    if (videoElements.videoOpenFolder) {
-        videoElements.videoOpenFolder.addEventListener('click', openVideoFolder);
     }
     if (videoElements.refreshOutputs) {
         videoElements.refreshOutputs.addEventListener('click', fetchVideos);
@@ -105,7 +93,12 @@ function renderVideosGrid() {
     videoElements.outputsGrid.innerHTML = AppState.videos.map((video, index) => `
         <div class="video-card" data-index="${index}">
             <div class="video-thumbnail">
-                <i class="fas fa-video"></i>
+                <img src="${API_BASE}/video/thumbnail/${encodeURIComponent(video.name)}" 
+                     alt="${video.name}" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="thumbnail-fallback" style="display: none;">
+                    <i class="fas fa-video"></i>
+                </div>
                 <div class="play-overlay">
                     <i class="fas fa-play-circle"></i>
                 </div>
@@ -144,28 +137,6 @@ function openVideoPlayer(video) {
         videoElements.videoModalTitle.textContent = video.name;
     }
     
-    // Set video info
-    if (videoElements.videoInfo) {
-        videoElements.videoInfo.innerHTML = `
-            <div class="video-info-row">
-                <span class="video-info-label">File Name</span>
-                <span class="video-info-value">${video.name}</span>
-            </div>
-            <div class="video-info-row">
-                <span class="video-info-label">Size</span>
-                <span class="video-info-value">${formatFileSize(video.size_bytes)}</span>
-            </div>
-            <div class="video-info-row">
-                <span class="video-info-label">Created</span>
-                <span class="video-info-value">${formatDate(video.created)}</span>
-            </div>
-            <div class="video-info-row">
-                <span class="video-info-label">Path</span>
-                <span class="video-info-value" style="font-size: 11px; word-break: break-all;">${video.path}</span>
-            </div>
-        `;
-    }
-    
     // Show modal
     videoElements.videoModal.classList.add('active');
 }
@@ -176,26 +147,4 @@ function closeVideoModal() {
     videoElements.videoPlayer.pause();
     videoElements.videoModal.classList.remove('active');
     AppState.currentVideo = null;
-}
-
-async function openVideoFolder() {
-    if (!AppState.currentVideo) return;
-    
-    try {
-        const response = await fetch(`${API_BASE}/video/open-folder`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ video_name: AppState.currentVideo.name })
-        });
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            showToast('Opened video folder', 'success');
-        } else {
-            showToast(data.message || 'Failed to open folder', 'error');
-        }
-    } catch (error) {
-        console.error('Failed to open folder:', error);
-        showToast('Failed to open folder', 'error');
-    }
 }

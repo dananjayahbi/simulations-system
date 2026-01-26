@@ -569,6 +569,72 @@ class VideoGenerator:
         except Exception as e:
             return {'error': str(e)}
     
+    def generate_thumbnail(self, video_name: str, frame_number: int = 5, 
+                          thumbnail_dir: Optional[Path] = None) -> Optional[Path]:
+        """
+        Generate a thumbnail image from a specific frame of a video.
+        
+        Args:
+            video_name: Name of the video file
+            frame_number: Which frame to extract (default: 5th frame)
+            thumbnail_dir: Directory to save thumbnails (default: output/thumbnails)
+        
+        Returns:
+            Path to the generated thumbnail or None if failed
+        """
+        try:
+            video_path = self.output_dir / video_name
+            
+            if not video_path.exists():
+                logger.error(f"Video not found: {video_path}")
+                return None
+            
+            # Create thumbnails directory
+            if thumbnail_dir is None:
+                thumbnail_dir = self.output_dir.parent / "thumbnails"
+            thumbnail_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Generate thumbnail filename based on video name
+            thumb_name = Path(video_name).stem + ".jpg"
+            thumb_path = thumbnail_dir / thumb_name
+            
+            # If thumbnail already exists, return it
+            if thumb_path.exists():
+                # Check if thumbnail is newer than video
+                if thumb_path.stat().st_mtime >= video_path.stat().st_mtime:
+                    return thumb_path
+            
+            # Build FFmpeg command to extract specific frame
+            # Use select filter to get the Nth frame
+            cmd = [
+                self.ffmpeg_path,
+                '-y',  # Overwrite output
+                '-i', str(video_path),
+                '-vf', f"select='eq(n,{frame_number - 1})'",  # 0-indexed
+                '-vframes', '1',
+                '-q:v', '2',  # High quality JPEG
+                str(thumb_path)
+            ]
+            
+            logger.info(f"Generating thumbnail for {video_name} (frame {frame_number})")
+            
+            run_kwargs = {'capture_output': True, 'text': True}
+            if sys.platform == 'win32' and hasattr(subprocess, 'CREATE_NO_WINDOW'):
+                run_kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+            
+            result = subprocess.run(cmd, **run_kwargs)
+            
+            if result.returncode == 0 and thumb_path.exists():
+                logger.info(f"Thumbnail generated: {thumb_path}")
+                return thumb_path
+            else:
+                logger.error(f"Failed to generate thumbnail: {result.stderr}")
+                return None
+                
+        except Exception as e:
+            logger.error(f"Error generating thumbnail for {video_name}: {e}")
+            return None
+    
     def list_output_videos(self) -> List[Dict]:
         """List all generated videos in the output directory."""
         videos = []

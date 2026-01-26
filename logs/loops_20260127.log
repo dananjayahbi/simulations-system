@@ -341,3 +341,206 @@
 2026-01-27 02:59:25,444 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
 2026-01-27 02:59:25,512 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
 2026-01-27 02:59:25,514 | INFO | 127.0.0.1 - - [27/Jan/2026 02:59:25] "GET /api/video/list HTTP/1.1" 200 -
+2026-01-27 03:04:37,834 | INFO | ==================================================
+2026-01-27 03:04:37,834 | INFO | Loops Visualization System - Starting
+2026-01-27 03:04:37,834 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 03:04:37,834 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 03:04:37,835 | INFO | Found 1 simulation(s)
+2026-01-27 03:04:37,835 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 03:04:37,836 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 03:04:37,876 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 03:04:37,876 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 03:04:39,955 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:39] "GET / HTTP/1.1" 200 -
+2026-01-27 03:04:39,989 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:39] "[36mGET /css/variables.css HTTP/1.1[0m" 304 -
+2026-01-27 03:04:39,997 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:39] "[36mGET /css/layout.css HTTP/1.1[0m" 304 -
+2026-01-27 03:04:39,999 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:39] "[36mGET /css/components.css HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,000 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /css/cards.css HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,003 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /css/terminal.css HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,006 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /css/modal.css HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,012 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /css/responsive.css HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,013 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "GET /css/videos.css HTTP/1.1" 200 -
+2026-01-27 03:04:40,017 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /js/core.js HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,023 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /js/navigation.js HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,028 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /js/modal.js HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,030 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /js/simulations.js HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,036 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /js/terminal.js HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,037 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "[36mGET /js/app.js HTTP/1.1[0m" 304 -
+2026-01-27 03:04:40,072 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "GET /js/videos.js HTTP/1.1" 200 -
+2026-01-27 03:04:40,265 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "GET /api/simulations HTTP/1.1" 200 -
+2026-01-27 03:04:40,269 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "GET /socket.io/?EIO=4&transport=polling&t=PlyElA3 HTTP/1.1" 200 -
+2026-01-27 03:04:40,328 | INFO | Client connected via WebSocket
+2026-01-27 03:04:40,329 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "POST /socket.io/?EIO=4&transport=polling&t=PlyElB0&sid=RCxoY4f0ZqVJAmpZAAAA HTTP/1.1" 200 -
+2026-01-27 03:04:40,332 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "GET /socket.io/?EIO=4&transport=polling&t=PlyElB1&sid=RCxoY4f0ZqVJAmpZAAAA HTTP/1.1" 200 -
+2026-01-27 03:04:40,425 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:40] "GET /api/system/info HTTP/1.1" 200 -
+2026-01-27 03:04:41,983 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:42,060 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:42,062 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:42] "GET /api/video/list HTTP/1.1" 200 -
+2026-01-27 03:04:43,610 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:43,612 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:43,615 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:43,616 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:43,617 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:43,619 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:43,756 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:43,757 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:43,757 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:43,758 | INFO | Generating thumbnail for sorting_comparison_20260127_022455 - Copy (7).mp4 (frame 5)
+2026-01-27 03:04:43,758 | INFO | Generating thumbnail for sorting_comparison_20260127_022455 - Copy (4).mp4 (frame 5)
+2026-01-27 03:04:43,759 | INFO | Generating thumbnail for sorting_comparison_20260127_022455 - Copy (3).mp4 (frame 5)
+2026-01-27 03:04:43,764 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:43,765 | INFO | Generating thumbnail for sorting_comparison_20260127_022455 - Copy (2).mp4 (frame 5)
+2026-01-27 03:04:43,766 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:43,766 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:43,766 | INFO | Generating thumbnail for sorting_comparison_20260127_022455 - Copy (6).mp4 (frame 5)
+2026-01-27 03:04:43,767 | INFO | Generating thumbnail for sorting_comparison_20260127_022455 - Copy (5).mp4 (frame 5)
+2026-01-27 03:04:44,122 | INFO | Thumbnail generated: E:\test_repos\loops\output\thumbnails\sorting_comparison_20260127_022455 - Copy (4).jpg
+2026-01-27 03:04:44,124 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(4).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,127 | INFO | Thumbnail generated: E:\test_repos\loops\output\thumbnails\sorting_comparison_20260127_022455 - Copy (2).jpg
+2026-01-27 03:04:44,127 | INFO | Thumbnail generated: E:\test_repos\loops\output\thumbnails\sorting_comparison_20260127_022455 - Copy (3).jpg
+2026-01-27 03:04:44,127 | INFO | Thumbnail generated: E:\test_repos\loops\output\thumbnails\sorting_comparison_20260127_022455 - Copy (6).jpg
+2026-01-27 03:04:44,129 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(2).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,130 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(3).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,132 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(6).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,132 | INFO | Thumbnail generated: E:\test_repos\loops\output\thumbnails\sorting_comparison_20260127_022455 - Copy (7).jpg
+2026-01-27 03:04:44,134 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(7).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,135 | INFO | Thumbnail generated: E:\test_repos\loops\output\thumbnails\sorting_comparison_20260127_022455 - Copy (5).jpg
+2026-01-27 03:04:44,138 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(5).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,266 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,273 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,275 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,290 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,293 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,295 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,305 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,306 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,308 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,312 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,314 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,319 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,354 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,355 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,356 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,358 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,361 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,366 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,491 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,495 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(4).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,571 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,574 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(6).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,602 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,604 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(3).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,614 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,617 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(2).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,620 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,620 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,623 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(2).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,624 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(4).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,634 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,637 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,639 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,642 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(7).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,642 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,645 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(5).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,646 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,647 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,649 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(3).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,650 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(6).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,652 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(3).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,654 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(7).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,659 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,661 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,661 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,662 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,664 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(6).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,669 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,671 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(7).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,671 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(5).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:44,672 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(4).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,674 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(5).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,678 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,681 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy%20(2).mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:44,685 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /socket.io/?EIO=4&transport=polling&t=PlyEle6 HTTP/1.1" 200 -
+2026-01-27 03:04:44,701 | INFO | Client connected via WebSocket
+2026-01-27 03:04:44,702 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "POST /socket.io/?EIO=4&transport=polling&t=PlyEmFO&sid=Am1xpWT2ottWPgysAAAC HTTP/1.1" 200 -
+2026-01-27 03:04:44,706 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /socket.io/?EIO=4&transport=polling&t=PlyEmFP&sid=Am1xpWT2ottWPgysAAAC HTTP/1.1" 200 -
+2026-01-27 03:04:44,715 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:44] "GET /socket.io/?EIO=4&transport=polling&t=PlyEmFc&sid=Am1xpWT2ottWPgysAAAC HTTP/1.1" 200 -
+2026-01-27 03:04:44,822 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,834 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:44,926 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,927 | INFO | Generating thumbnail for sorting_comparison_20260127_022455 - Copy.mp4 (frame 5)
+2026-01-27 03:04:44,933 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:44,934 | INFO | Generating thumbnail for sorting_comparison_20260127_022455.mp4 (frame 5)
+2026-01-27 03:04:45,124 | INFO | Thumbnail generated: E:\test_repos\loops\output\thumbnails\sorting_comparison_20260127_022455 - Copy.jpg
+2026-01-27 03:04:45,126 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:45] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy.mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:45,126 | INFO | Thumbnail generated: E:\test_repos\loops\output\thumbnails\sorting_comparison_20260127_022455.jpg
+2026-01-27 03:04:45,127 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:45] "GET /api/video/thumbnail/sorting_comparison_20260127_022455.mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:45,174 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:45,175 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:45,179 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:45,181 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:45,206 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:45,213 | INFO | Found FFmpeg in PATH: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.EXE
+2026-01-27 03:04:45,325 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:45,329 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:45] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy.mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:45,329 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:45,331 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:45,333 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:45] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455.mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:45,333 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:45,335 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:45] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455.mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:45,337 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:45] "[35m[1mGET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy.mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:45,351 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:45,353 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:45] "GET /api/video/thumbnail/sorting_comparison_20260127_022455%20-%20Copy.mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:45,353 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:04:45,356 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:45] "GET /api/video/thumbnail/sorting_comparison_20260127_022455.mp4 HTTP/1.1" 200 -
+2026-01-27 03:04:53,032 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:53] "[35m[1mGET /api/video/stream/sorting_comparison_20260127_022455%20-%20Copy%20(3).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:53,070 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:53] "[35m[1mGET /api/video/stream/sorting_comparison_20260127_022455%20-%20Copy%20(3).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:04:57,462 | INFO | 127.0.0.1 - - [27/Jan/2026 03:04:57] "[35m[1mGET /api/video/stream/sorting_comparison_20260127_022455%20-%20Copy%20(3).mp4 HTTP/1.1[0m" 206 -
+2026-01-27 03:05:15,315 | INFO | Launching simulation: Sorting Visualizer (embedded=True)
+2026-01-27 03:05:15,315 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 03:05:15,328 | INFO | Started streaming output for simulation: sorting_visualizer
+2026-01-27 03:05:15,328 | INFO | 127.0.0.1 - - [27/Jan/2026 03:05:15] "POST /api/simulations/sorting_visualizer/launch HTTP/1.1" 200 -
+2026-01-27 03:05:15,329 | INFO | Simulation log: E:\test_repos\loops\logs\simulation_sorting_visualizer_20260127_030515.log
+2026-01-27 03:05:28,431 | INFO | Simulation sorting_visualizer: Process exited with code 0
+2026-01-27 03:05:39,591 | INFO | ==================================================
+2026-01-27 03:05:39,591 | INFO | Loops Visualization System - Starting
+2026-01-27 03:05:39,591 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 03:05:39,591 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 03:05:39,592 | INFO | Found 1 simulation(s)
+2026-01-27 03:05:39,593 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 03:05:39,594 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 03:05:39,645 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 03:05:39,646 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 03:05:43,397 | INFO | Found FFmpeg at: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe
+2026-01-27 03:05:43,496 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:05:43,498 | INFO | 127.0.0.1 - - [27/Jan/2026 03:05:43] "GET /api/video/list HTTP/1.1" 200 -
+2026-01-27 03:05:44,119 | INFO | 127.0.0.1 - - [27/Jan/2026 03:05:44] "GET /socket.io/?EIO=4&transport=polling&t=PlyE-lo HTTP/1.1" 200 -
+2026-01-27 03:05:44,125 | INFO | Client connected via WebSocket
+2026-01-27 03:05:44,125 | INFO | 127.0.0.1 - - [27/Jan/2026 03:05:44] "POST /socket.io/?EIO=4&transport=polling&t=PlyE-lv&sid=JcPPuIayj_COIPycAAAA HTTP/1.1" 200 -
+2026-01-27 03:05:44,127 | INFO | 127.0.0.1 - - [27/Jan/2026 03:05:44] "GET /socket.io/?EIO=4&transport=polling&t=PlyE-lw&sid=JcPPuIayj_COIPycAAAA HTTP/1.1" 200 -
+2026-01-27 03:05:44,181 | INFO | 127.0.0.1 - - [27/Jan/2026 03:05:44] "GET /socket.io/?EIO=4&transport=polling&t=PlyE-mn HTTP/1.1" 200 -
+2026-01-27 03:05:44,186 | INFO | Client connected via WebSocket
+2026-01-27 03:05:44,186 | INFO | 127.0.0.1 - - [27/Jan/2026 03:05:44] "POST /socket.io/?EIO=4&transport=polling&t=PlyE-mt&sid=qNfebDHbSkCaXcPRAAAC HTTP/1.1" 200 -
+2026-01-27 03:05:44,188 | INFO | 127.0.0.1 - - [27/Jan/2026 03:05:44] "GET /socket.io/?EIO=4&transport=polling&t=PlyE-mu&sid=qNfebDHbSkCaXcPRAAAC HTTP/1.1" 200 -
+2026-01-27 03:06:56,601 | INFO | ==================================================
+2026-01-27 03:06:56,601 | INFO | Loops Visualization System - Starting
+2026-01-27 03:06:56,601 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 03:06:56,602 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 03:06:56,603 | INFO | Found 1 simulation(s)
+2026-01-27 03:06:56,603 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 03:06:56,603 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 03:06:56,642 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 03:06:56,642 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 03:06:59,592 | INFO | 127.0.0.1 - - [27/Jan/2026 03:06:59] "GET /socket.io/?EIO=4&transport=polling&t=PlyFHB3 HTTP/1.1" 200 -
+2026-01-27 03:06:59,598 | INFO | Client connected via WebSocket
+2026-01-27 03:06:59,600 | INFO | 127.0.0.1 - - [27/Jan/2026 03:06:59] "POST /socket.io/?EIO=4&transport=polling&t=PlyFHBA&sid=z23x-APlHJM3_n7tAAAA HTTP/1.1" 200 -
+2026-01-27 03:06:59,600 | INFO | 127.0.0.1 - - [27/Jan/2026 03:06:59] "GET /socket.io/?EIO=4&transport=polling&t=PlyFHBB&sid=z23x-APlHJM3_n7tAAAA HTTP/1.1" 200 -
+2026-01-27 03:07:00,178 | INFO | 127.0.0.1 - - [27/Jan/2026 03:07:00] "GET /socket.io/?EIO=4&transport=polling&t=PlyFHKD HTTP/1.1" 200 -
+2026-01-27 03:07:00,184 | INFO | Client connected via WebSocket
+2026-01-27 03:07:00,184 | INFO | 127.0.0.1 - - [27/Jan/2026 03:07:00] "POST /socket.io/?EIO=4&transport=polling&t=PlyFHKK&sid=zbT2WvjYJP9JInpaAAAC HTTP/1.1" 200 -
+2026-01-27 03:07:00,186 | INFO | 127.0.0.1 - - [27/Jan/2026 03:07:00] "GET /socket.io/?EIO=4&transport=polling&t=PlyFHKL&sid=zbT2WvjYJP9JInpaAAAC HTTP/1.1" 200 -
+2026-01-27 03:07:02,622 | INFO | Found FFmpeg at: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe
+2026-01-27 03:07:02,714 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
+2026-01-27 03:07:02,716 | INFO | 127.0.0.1 - - [27/Jan/2026 03:07:02] "GET /api/video/thumbnail/sorting_comparison_20260127_022455.mp4 HTTP/1.1" 200 -
