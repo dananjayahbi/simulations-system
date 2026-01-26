@@ -1,2 +1,3 @@
 venv/
-frames/
+simulations/sorting_visualizer/frames/
+simulations/sorting_visualizer/comparison_frames/
