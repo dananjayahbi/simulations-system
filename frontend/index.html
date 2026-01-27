@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/modal.css">
     <link rel="stylesheet" href="css/terminal.css">
     <link rel="stylesheet" href="css/videos.css">
+    <link rel="stylesheet" href="css/addons.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -40,6 +41,10 @@
                 <li class="nav-item" data-section="outputs">
                     <i class="fas fa-film"></i>
                     <span>Outputs</span>
+                </li>
+                <li class="nav-item" data-section="addons">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <span>Add-ons</span>
                 </li>
                 <li class="nav-item" data-section="settings">
                     <i class="fas fa-cog"></i>
@@ -201,6 +206,62 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Add-ons Section -->
+                <section id="addons-section" class="section">
+                    <div class="addons-page">
+                        <div class="addons-header">
+                            <h1>📦 Add-ons</h1>
+                            <div class="addons-header-actions">
+                                <button class="upload-addon-btn" id="upload-addon-btn">
+                                    📤 Upload Add-on
+                                </button>
+                                <button class="scan-addons-btn" id="scan-addons-btn">
+                                    🔍 Scan Add-ons
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="addons-container">
+                            <!-- Add-ons will be loaded here dynamically -->
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Modal -->
+                    <div class="upload-modal" id="upload-modal">
+                        <div class="upload-modal-content">
+                            <div class="upload-modal-header">
+                                <h2>Upload Add-on</h2>
+                                <button class="upload-modal-close" id="upload-modal-close">✕</button>
+                            </div>
+                            
+                            <div class="upload-drop-zone" id="upload-drop-zone">
+                                <div class="upload-drop-zone-icon">📦</div>
+                                <div class="upload-drop-zone-text">Drop ZIP file here or click to browse</div>
+                                <div class="upload-drop-zone-hint">Maximum file size: 50MB</div>
+                            </div>
+                            
+                            <input type="file" id="upload-file-input" class="upload-file-input" accept=".zip">
+                            
+                            <div class="upload-file-info" id="upload-file-info">
+                                <div class="upload-file-name" id="upload-file-name">filename.zip</div>
+                                <div class="upload-file-size" id="upload-file-size">0 KB</div>
+                            </div>
+                            
+                            <div class="upload-progress" id="upload-progress">
+                                <div class="upload-progress-bar">
+                                    <div class="upload-progress-fill" id="upload-progress-fill"></div>
+                                </div>
+                                <div class="upload-progress-text" id="upload-progress-text">Uploading...</div>
+                            </div>
+                            
+                            <div class="upload-modal-actions">
+                                <button class="upload-cancel-btn" id="upload-cancel-btn">Cancel</button>
+                                <button class="upload-install-btn" id="upload-install-btn" disabled>Install</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
 
             <!-- Terminal Panel (1/3) -->
@@ -276,6 +337,7 @@
     <script src="js/simulations.js"></script>
     <script src="js/terminal.js"></script>
     <script src="js/videos.js"></script>
+    <script src="js/addons.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

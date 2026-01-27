@@ -1,0 +1,21 @@
+{
+    "id": "my_simulation",
+    "name": "My Simulation",
+    "description": "A brief description of what this simulation does. Explain the visualization, algorithms, or concepts it demonstrates.",
+    "icon": "🎮",
+    "color": "#6366f1",
+    "version": "1.0.0",
+    "author": "Your Name",
+    "license": "MIT",
+    "homepage": "https://github.com/yourname/your-repo",
+    "min_loops_version": "1.0.0",
+    "tags": [
+        "visualization",
+        "algorithm",
+        "demo"
+    ],
+    "requires_pygame": true,
+    "entry_point": "main.py",
+    "control_panel": "control_panel.py",
+    "dependencies": []
+}

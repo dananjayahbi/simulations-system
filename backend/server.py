@@ -58,6 +58,9 @@ logger = logging.getLogger('loops')
 # Add base dir to path for imports
 sys.path.insert(0, str(BASE_DIR))
 
+# Import add-on manager
+from backend.addon_manager import AddonManager
+
 app = Flask(__name__, static_folder=str(FRONTEND_DIR))
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
@@ -67,6 +70,18 @@ SIMULATIONS_REGISTRY = {}
 
 # Store running processes
 RUNNING_PROCESSES = {}
+
+# Add-on manager instance
+addon_manager = None
+
+def get_addon_manager():
+    """Get or create the add-on manager instance."""
+    global addon_manager
+    if addon_manager is None:
+        addon_manager = AddonManager(BASE_DIR)
+        # Scan and register built-in add-ons on first access
+        addon_manager.scan_and_register_builtin()
+    return addon_manager
 
 
 def discover_simulations():
@@ -666,6 +681,235 @@ def get_simulation_frames(sim_id):
         "simulation": sim["name"],
         "frame_folders": frame_folders
     })
+
+
+# ============================================
+# ADD-ON MANAGEMENT ENDPOINTS
+# ============================================
+
+@app.route('/api/addon/list', methods=['GET'])
+def list_addons():
+    """List all installed add-ons."""
+    try:
+        manager = get_addon_manager()
+        addons = manager.list_addons()
+        
+        return jsonify({
+            "status": "success",
+            "addons": addons,
+            "count": len(addons)
+        })
+    except Exception as e:
+        logger.error(f"Error listing add-ons: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/addon/upload', methods=['POST'])
+def upload_addon():
+    """Upload and install a new add-on from ZIP file."""
+    try:
+        # Check if file is present
+        if 'file' not in request.files:
+            return jsonify({
+                "status": "error",
+                "message": "No file provided"
+            }), 400
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            return jsonify({
+                "status": "error",
+                "message": "Empty filename"
+            }), 400
+        
+        if not file.filename.endswith('.zip'):
+            return jsonify({
+                "status": "error",
+                "message": "File must be a ZIP archive"
+            }), 400
+        
+        # Save the uploaded file
+        manager = get_addon_manager()
+        upload_path = manager.uploads_dir / file.filename
+        file.save(upload_path)
+        
+        logger.info(f"Uploaded add-on file: {file.filename}")
+        
+        # Install the add-on
+        success, message, addon_data = manager.install_addon(upload_path)
+        
+        # Clean up the uploaded file
+        if upload_path.exists():
+            upload_path.unlink()
+        
+        if success:
+            # Refresh simulations registry
+            global SIMULATIONS_REGISTRY
+            SIMULATIONS_REGISTRY = discover_simulations()
+            
+            return jsonify({
+                "status": "success",
+                "message": message,
+                "addon": addon_data
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": message
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Error uploading add-on: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/addon/<addon_id>', methods=['GET'])
+def get_addon(addon_id):
+    """Get details of a specific add-on."""
+    try:
+        manager = get_addon_manager()
+        addon = manager.get_addon(addon_id)
+        
+        if addon:
+            return jsonify({
+                "status": "success",
+                "addon": addon
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": f"Add-on '{addon_id}' not found"
+            }), 404
+    except Exception as e:
+        logger.error(f"Error getting add-on {addon_id}: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/addon/<addon_id>', methods=['DELETE'])
+def delete_addon(addon_id):
+    """Uninstall an add-on completely."""
+    try:
+        manager = get_addon_manager()
+        success, message, stats = manager.uninstall_addon(addon_id)
+        
+        if success:
+            # Refresh simulations registry
+            global SIMULATIONS_REGISTRY
+            SIMULATIONS_REGISTRY = discover_simulations()
+            
+            return jsonify({
+                "status": "success",
+                "message": message,
+                "removed": stats
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": message
+            }), 400
+    except Exception as e:
+        logger.error(f"Error deleting add-on {addon_id}: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/addon/<addon_id>/enable', methods=['POST'])
+def enable_addon(addon_id):
+    """Enable a disabled add-on."""
+    try:
+        manager = get_addon_manager()
+        success, message = manager.enable_addon(addon_id)
+        
+        if success:
+            # Refresh simulations registry
+            global SIMULATIONS_REGISTRY
+            SIMULATIONS_REGISTRY = discover_simulations()
+            
+            return jsonify({
+                "status": "success",
+                "message": message
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": message
+            }), 400
+    except Exception as e:
+        logger.error(f"Error enabling add-on {addon_id}: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/addon/<addon_id>/disable', methods=['POST'])
+def disable_addon(addon_id):
+    """Disable an add-on without removing it."""
+    try:
+        manager = get_addon_manager()
+        success, message = manager.disable_addon(addon_id)
+        
+        if success:
+            # Refresh simulations registry
+            global SIMULATIONS_REGISTRY
+            SIMULATIONS_REGISTRY = discover_simulations()
+            
+            return jsonify({
+                "status": "success",
+                "message": message
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": message
+            }), 400
+    except Exception as e:
+        logger.error(f"Error disabling add-on {addon_id}: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@app.route('/api/addon/<addon_id>/export', methods=['GET'])
+def export_addon(addon_id):
+    """Export an add-on as a ZIP file."""
+    try:
+        from flask import send_file
+        
+        manager = get_addon_manager()
+        success, message, zip_path = manager.export_addon(addon_id)
+        
+        if success and zip_path and zip_path.exists():
+            return send_file(
+                zip_path,
+                mimetype='application/zip',
+                as_attachment=True,
+                download_name=f"{addon_id}.zip"
+            )
+        else:
+            return jsonify({
+                "status": "error",
+                "message": message
+            }), 400
+    except Exception as e:
+        logger.error(f"Error exporting add-on {addon_id}: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
 
 # WebSocket Events

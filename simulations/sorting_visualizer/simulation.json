@@ -5,5 +5,11 @@
     "icon": "📊",
     "color": "#6366f1",
     "version": "1.0.0",
-    "author": "Loops System"
+    "author": "Loops System",
+    "license": "MIT",
+    "min_loops_version": "1.0.0",
+    "tags": ["sorting", "algorithms", "visualization", "educational"],
+    "requires_pygame": true,
+    "entry_point": "main.py",
+    "control_panel": "control_panel.py"
 }

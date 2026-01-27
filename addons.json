@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "addons": {
+    "sorting_visualizer": {
+      "id": "sorting_visualizer",
+      "name": "Sorting Visualizer",
+      "description": "Visualize sorting algorithms with rainbow gradient bars. Includes Bubble Sort, Quick Sort, and Merge Sort with speed controls and frame saving.",
+      "icon": "\ud83d\udcca",
+      "color": "#6366f1",
+      "version": "1.0.0",
+      "author": "Loops System",
+      "license": "MIT",
+      "min_loops_version": "1.0.0",
+      "tags": [
+        "sorting",
+        "algorithms",
+        "visualization",
+        "educational"
+      ],
+      "requires_pygame": true,
+      "entry_point": "main.py",
+      "control_panel": "control_panel.py",
+      "installed_at": "2026-01-27T20:52:11.845466",
+      "enabled": true,
+      "builtin": true
+    }
+  },
+  "last_updated": "2026-01-27T20:52:11.845894"
+}
