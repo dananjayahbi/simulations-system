@@ -1,0 +1,23 @@
+{
+    "id": "sorting_circles",
+    "name": "Sorting Circles",
+    "description": "Visualize sorting algorithms using circles arranged in a radial pattern. Watch as Bubble Sort, Quick Sort, and Merge Sort organize circles by size with beautiful animations.",
+    "icon": "⭕",
+    "color": "#10b981",
+    "version": "1.0.0",
+    "author": "Loops Community",
+    "license": "MIT",
+    "homepage": "https://github.com/loops-viz/sorting-circles",
+    "min_loops_version": "1.0.0",
+    "tags": [
+        "sorting",
+        "algorithms",
+        "visualization",
+        "circular",
+        "educational"
+    ],
+    "requires_pygame": true,
+    "entry_point": "main.py",
+    "control_panel": "control_panel.py",
+    "dependencies": []
+}

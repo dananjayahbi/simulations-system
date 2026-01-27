@@ -544,3 +544,98 @@
 2026-01-27 03:07:02,622 | INFO | Found FFmpeg at: C:\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe
 2026-01-27 03:07:02,714 | INFO | FFmpeg available: ffmpeg version N-117995-g56419fd096-20241203 Copyright (c) 2000-2024 the FFmpeg developers
 2026-01-27 03:07:02,716 | INFO | 127.0.0.1 - - [27/Jan/2026 03:07:02] "GET /api/video/thumbnail/sorting_comparison_20260127_022455.mp4 HTTP/1.1" 200 -
+2026-01-27 20:52:10,631 | INFO | ==================================================
+2026-01-27 20:52:10,645 | INFO | Loops Visualization System - Starting
+2026-01-27 20:52:10,646 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 20:52:10,646 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 20:52:10,657 | INFO | Found 1 simulation(s)
+2026-01-27 20:52:10,657 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 20:52:10,658 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 20:52:10,868 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 20:52:10,868 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 20:52:11,369 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET / HTTP/1.1" 200 -
+2026-01-27 20:52:11,511 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/variables.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,511 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/layout.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,517 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/addons.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,522 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/cards.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,531 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/terminal.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,531 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/videos.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,539 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/modal.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,540 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/components.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,540 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /css/responsive.css HTTP/1.1" 200 -
+2026-01-27 20:52:11,560 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /js/core.js HTTP/1.1" 200 -
+2026-01-27 20:52:11,586 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /js/videos.js HTTP/1.1" 200 -
+2026-01-27 20:52:11,586 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /js/navigation.js HTTP/1.1" 200 -
+2026-01-27 20:52:11,587 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /js/simulations.js HTTP/1.1" 200 -
+2026-01-27 20:52:11,587 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /js/modal.js HTTP/1.1" 200 -
+2026-01-27 20:52:11,595 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /js/addons.js HTTP/1.1" 200 -
+2026-01-27 20:52:11,609 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /js/terminal.js HTTP/1.1" 200 -
+2026-01-27 20:52:11,624 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /js/app.js HTTP/1.1" 200 -
+2026-01-27 20:52:11,845 | INFO | Registered built-in add-on: sorting_visualizer
+2026-01-27 20:52:11,861 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /api/addon/list HTTP/1.1" 200 -
+2026-01-27 20:52:11,864 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /socket.io/?EIO=4&transport=polling&t=Pm034mH HTTP/1.1" 200 -
+2026-01-27 20:52:11,867 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /api/simulations HTTP/1.1" 200 -
+2026-01-27 20:52:11,884 | INFO | Client connected via WebSocket
+2026-01-27 20:52:11,884 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "POST /socket.io/?EIO=4&transport=polling&t=Pm034md&sid=F9hb8642J46WRaQBAAAA HTTP/1.1" 200 -
+2026-01-27 20:52:11,888 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /socket.io/?EIO=4&transport=polling&t=Pm034mf&sid=F9hb8642J46WRaQBAAAA HTTP/1.1" 200 -
+2026-01-27 20:52:11,927 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:11] "GET /socket.io/?EIO=4&transport=polling&t=Pm034nC&sid=F9hb8642J46WRaQBAAAA HTTP/1.1" 200 -
+2026-01-27 20:52:12,007 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:12] "GET /api/system/info HTTP/1.1" 200 -
+2026-01-27 20:52:12,315 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:12] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-27 20:52:20,880 | INFO | Launching simulation: Sorting Visualizer (embedded=False)
+2026-01-27 20:52:20,880 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 20:52:20,889 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:20] "POST /api/simulations/sorting_visualizer/launch HTTP/1.1" 200 -
+2026-01-27 20:52:35,145 | INFO | 127.0.0.1 - - [27/Jan/2026 20:52:35] "GET /api/addon/list HTTP/1.1" 200 -
+2026-01-27 21:00:44,944 | INFO | ==================================================
+2026-01-27 21:00:44,944 | INFO | Loops Visualization System - Starting
+2026-01-27 21:00:44,945 | INFO | Base Directory: E:\test_repos\loops
+2026-01-27 21:00:44,945 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 21:00:44,946 | INFO | Found 1 simulation(s)
+2026-01-27 21:00:44,946 | INFO |   - Sorting Visualizer (sorting_visualizer)
+2026-01-27 21:00:44,947 | INFO | Server starting on http://127.0.0.1:5000
+2026-01-27 21:00:44,986 | INFO | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-27 21:00:44,987 | INFO | [33mPress CTRL+C to quit[0m
+2026-01-27 21:00:46,925 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET / HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,947 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/variables.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,952 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/layout.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,956 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/components.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,957 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/cards.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,961 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/modal.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,964 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/terminal.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,969 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/videos.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,971 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/addons.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,975 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /css/responsive.css HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,984 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /js/navigation.js HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,986 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /js/modal.js HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,987 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /js/simulations.js HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,987 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /js/core.js HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,991 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /js/terminal.js HTTP/1.1[0m" 304 -
+2026-01-27 21:00:46,994 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:46] "[36mGET /js/videos.js HTTP/1.1[0m" 304 -
+2026-01-27 21:00:47,004 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "[36mGET /js/addons.js HTTP/1.1[0m" 304 -
+2026-01-27 21:00:47,005 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "[36mGET /js/app.js HTTP/1.1[0m" 304 -
+2026-01-27 21:00:47,181 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "GET /api/addon/list HTTP/1.1" 200 -
+2026-01-27 21:00:47,188 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "GET /api/simulations HTTP/1.1" 200 -
+2026-01-27 21:00:47,192 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "GET /socket.io/?EIO=4&transport=polling&t=Pm052aD HTTP/1.1" 200 -
+2026-01-27 21:00:47,210 | INFO | Client connected via WebSocket
+2026-01-27 21:00:47,211 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "POST /socket.io/?EIO=4&transport=polling&t=Pm052aW&sid=KB_F7HvLc8iz5_ObAAAA HTTP/1.1" 200 -
+2026-01-27 21:00:47,218 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "GET /socket.io/?EIO=4&transport=polling&t=Pm052aX&sid=KB_F7HvLc8iz5_ObAAAA HTTP/1.1" 200 -
+2026-01-27 21:00:47,231 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "GET /socket.io/?EIO=4&transport=polling&t=Pm052av&sid=KB_F7HvLc8iz5_ObAAAA HTTP/1.1" 200 -
+2026-01-27 21:00:47,332 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "GET /api/system/info HTTP/1.1" 200 -
+2026-01-27 21:00:47,408 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "GET /socket.io/?EIO=4&transport=polling&t=Pm052dh HTTP/1.1" 200 -
+2026-01-27 21:00:47,414 | INFO | Client connected via WebSocket
+2026-01-27 21:00:47,415 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "POST /socket.io/?EIO=4&transport=polling&t=Pm052do&sid=meyR8KTQ2wro9obTAAAC HTTP/1.1" 200 -
+2026-01-27 21:00:47,420 | INFO | 127.0.0.1 - - [27/Jan/2026 21:00:47] "GET /socket.io/?EIO=4&transport=polling&t=Pm052dq&sid=meyR8KTQ2wro9obTAAAC HTTP/1.1" 200 -
+2026-01-27 21:02:07,298 | INFO | Uploaded add-on file: sorting_circles.zip
+2026-01-27 21:02:08,939 | INFO | Add-on 'sorting_circles' installed successfully
+2026-01-27 21:02:08,980 | INFO | 127.0.0.1 - - [27/Jan/2026 21:02:08] "POST /api/addon/upload HTTP/1.1" 200 -
+2026-01-27 21:02:13,353 | INFO | 127.0.0.1 - - [27/Jan/2026 21:02:13] "GET /api/addon/list HTTP/1.1" 200 -
+2026-01-27 21:02:36,834 | INFO | Launching simulation: Sorting Circles (embedded=False)
+2026-01-27 21:02:36,834 | INFO | Using Python: E:\test_repos\loops\venv\Scripts\python.exe
+2026-01-27 21:02:36,850 | INFO | 127.0.0.1 - - [27/Jan/2026 21:02:36] "POST /api/simulations/sorting_circles/launch HTTP/1.1" 200 -
+2026-01-27 21:03:27,343 | INFO | Client disconnected from WebSocket
+2026-01-27 21:03:27,344 | INFO | 127.0.0.1 - - [27/Jan/2026 21:03:27] "GET /socket.io/?EIO=4&transport=websocket&sid=KB_F7HvLc8iz5_ObAAAA HTTP/1.1" 200 -
+2026-01-27 21:06:17,588 | INFO | 127.0.0.1 - - [27/Jan/2026 21:06:17] "GET /socket.io/?EIO=4&transport=polling&t=Pm06JEn HTTP/1.1" 200 -
+2026-01-27 21:06:17,594 | INFO | Client connected via WebSocket
+2026-01-27 21:06:17,594 | INFO | 127.0.0.1 - - [27/Jan/2026 21:06:17] "POST /socket.io/?EIO=4&transport=polling&t=Pm06JEt&sid=_5HYoq9wu9LVj9T1AAAE HTTP/1.1" 200 -
+2026-01-27 21:06:17,596 | INFO | 127.0.0.1 - - [27/Jan/2026 21:06:17] "GET /socket.io/?EIO=4&transport=polling&t=Pm06JEt.0&sid=_5HYoq9wu9LVj9T1AAAE HTTP/1.1" 200 -
