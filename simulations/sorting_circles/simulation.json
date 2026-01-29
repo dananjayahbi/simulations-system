@@ -19,5 +19,6 @@
     "requires_pygame": true,
     "entry_point": "main.py",
     "control_panel": "control_panel.py",
-    "dependencies": []
+    "dependencies": [],
+    "frame_types": ["normal"]
 }

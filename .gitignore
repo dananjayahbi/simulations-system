@@ -1,5 +1,6 @@
 venv/
 simulations/sorting_visualizer/frames/
 simulations/sorting_visualizer/comparison_frames/
+simulations/sorting_circles/frames/
 output/
 logs/

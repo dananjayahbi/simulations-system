@@ -210,6 +210,15 @@ class AddonManager:
             # Copy to simulations directory
             shutil.copytree(addon_temp_path, addon_dest)
             
+            # Install dependencies if requirements.txt exists
+            requirements_file = addon_dest / "requirements.txt"
+            if requirements_file.exists():
+                logger.info(f"Installing dependencies for '{addon_id}'...")
+                success, dep_message = self._install_dependencies(addon_id, requirements_file)
+                if not success:
+                    logger.warning(f"Dependency installation warning: {dep_message}")
+                    # Continue installation even if dependencies fail (non-critical)
+            
             # Create output directories
             (self.output_dir / "frames" / addon_id).mkdir(parents=True, exist_ok=True)
             (self.output_dir / "videos" / addon_id).mkdir(parents=True, exist_ok=True)
@@ -366,6 +375,55 @@ class AddonManager:
         except Exception as e:
             logger.error(f"Export failed: {e}")
             return False, f"Export error: {str(e)}", None
+    
+    def _install_dependencies(self, addon_id: str, requirements_file: Path) -> Tuple[bool, str]:
+        """Install Python dependencies from requirements.txt.
+        
+        Args:
+            addon_id: Add-on identifier
+            requirements_file: Path to requirements.txt
+            
+        Returns:
+            Tuple of (success, message)
+        """
+        import subprocess
+        
+        try:
+            # Read requirements
+            with open(requirements_file, 'r', encoding='utf-8') as f:
+                requirements = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+            
+            if not requirements:
+                return True, "No dependencies to install"
+            
+            logger.info(f"Installing {len(requirements)} dependencies for '{addon_id}'...")
+            
+            # Use the same Python interpreter that's running this script
+            python_executable = sys.executable
+            
+            # Install using pip
+            cmd = [python_executable, '-m', 'pip', 'install'] + requirements
+            
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=300  # 5 minute timeout
+            )
+            
+            if result.returncode == 0:
+                logger.info(f"Dependencies installed successfully for '{addon_id}'")
+                return True, "Dependencies installed successfully"
+            else:
+                error_msg = result.stderr or result.stdout
+                logger.error(f"Dependency installation failed: {error_msg}")
+                return False, f"Installation failed: {error_msg}"
+                
+        except subprocess.TimeoutExpired:
+            return False, "Installation timeout (>5 minutes)"
+        except Exception as e:
+            logger.error(f"Error installing dependencies: {e}")
+            return False, f"Error: {str(e)}"
     
     def scan_and_register_builtin(self):
         """Scan simulations directory and register built-in add-ons."""

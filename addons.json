@@ -46,10 +46,13 @@
       "entry_point": "main.py",
       "control_panel": "control_panel.py",
       "dependencies": [],
-      "installed_at": "2026-01-27T21:02:08.938346",
+      "frame_types": [
+        "normal"
+      ],
+      "installed_at": "2026-01-29T05:27:02.460035",
       "enabled": true,
       "builtin": false
     }
   },
-  "last_updated": "2026-01-27T21:02:08.938357"
+  "last_updated": "2026-01-29T05:27:02.460046"
 }

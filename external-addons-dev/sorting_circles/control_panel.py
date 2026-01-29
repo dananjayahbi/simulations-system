@@ -6,10 +6,15 @@ Tkinter-based GUI for configuring and launching the sorting circles visualizatio
 """
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import subprocess
 import sys
+import os
+import json
+import requests
+import time
 from pathlib import Path
+import threading
 
 SIMULATION_DIR = Path(__file__).resolve().parent
 BASE_DIR = SIMULATION_DIR.parent.parent
@@ -21,8 +26,13 @@ class SortingCirclesControlPanel:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("⭕ Sorting Circles - Control Panel")
-        self.root.geometry("450x600")
+        self.root.geometry("500x750")
         self.root.configure(bg='#0f172a')
+        
+        # Simulation process
+        self.sim_process = None
+        self.is_recording = False
+        self.frames_count = 0
         
         # Make it modern
         style = ttk.Style()
@@ -151,7 +161,7 @@ class SortingCirclesControlPanel:
         # Algorithm Selection
         algo_frame = tk.LabelFrame(
             main_frame,
-            text="🔢 Default Algorithm",
+            text="🔢 Algorithm",
             bg='#1e293b',
             fg='#e2e8f0',
             font=('Segoe UI', 11, 'bold'),
@@ -183,66 +193,134 @@ class SortingCirclesControlPanel:
             )
             radio.pack(padx=15, pady=5, anchor='w')
         
-        # Info Section
-        info_frame = tk.LabelFrame(
+        # Speed Control
+        speed_frame = tk.LabelFrame(
             main_frame,
-            text="ℹ️ Controls",
+            text="⚡ Animation Speed",
             bg='#1e293b',
             fg='#e2e8f0',
             font=('Segoe UI', 11, 'bold'),
             relief='ridge',
             bd=2
         )
-        info_frame.pack(fill='x', pady=(0, 15))
+        speed_frame.pack(fill='x', pady=(0, 15))
         
-        controls_text = """
-• SPACE - Play/Pause
-• R - Reset & Shuffle
-• S - Start/Stop Recording
-• 1/2/3 - Switch Algorithm
-• ↑↓ - Speed Control
-• ESC - Exit
-        """
+        speed_inner = tk.Frame(speed_frame, bg='#1e293b')
+        speed_inner.pack(fill='x', padx=15, pady=10)
         
-        controls_label = tk.Label(
-            info_frame,
-            text=controls_text.strip(),
+        ttk.Label(speed_inner, text="Operations/sec:").pack(side='left')
+        
+        self.speed_var = tk.IntVar(value=5)
+        speed_scale = tk.Scale(
+            speed_inner,
+            from_=1,
+            to=60,
+            orient='horizontal',
+            variable=self.speed_var,
+            bg='#1e293b',
+            fg='#e2e8f0',
+            activebackground='#10b981',
+            highlightthickness=0,
+            troughcolor='#334155',
+            length=200
+        )
+        speed_scale.pack(side='left', padx=10)
+        
+        # Status Display
+        status_frame = tk.LabelFrame(
+            main_frame,
+            text="📊 Status",
+            bg='#1e293b',
+            fg='#e2e8f0',
+            font=('Segoe UI', 11, 'bold'),
+            relief='ridge',
+            bd=2
+        )
+        status_frame.pack(fill='x', pady=(0, 15))
+        
+        self.status_label = tk.Label(
+            status_frame,
+            text="Ready to launch",
             bg='#1e293b',
             fg='#94a3b8',
-            font=('Consolas', 9),
-            justify='left'
+            font=('Segoe UI', 10)
         )
-        controls_label.pack(padx=15, pady=10)
+        self.status_label.pack(padx=15, pady=10)
+        
+        self.frames_label = tk.Label(
+            status_frame,
+            text="Frames: 0",
+            bg='#1e293b',
+            fg='#94a3b8',
+            font=('Segoe UI', 10)
+        )
+        self.frames_label.pack(padx=15, pady=(0, 10))
+        
+        # Control Buttons
+        btn_frame = tk.Frame(main_frame, bg='#0f172a')
+        btn_frame.pack(fill='x', pady=(0, 10))
         
         # Launch Button
-        launch_btn = tk.Button(
-            main_frame,
-            text="🚀 Launch Visualization",
+        self.launch_btn = tk.Button(
+            btn_frame,
+            text="🚀 Launch Simulation",
             command=self._launch,
             bg='#10b981',
             fg='white',
             activebackground='#059669',
             activeforeground='white',
-            font=('Segoe UI', 13, 'bold'),
+            font=('Segoe UI', 11, 'bold'),
             relief='flat',
             cursor='hand2',
-            padx=20,
-            pady=12
+            padx=15,
+            pady=10
         )
-        launch_btn.pack(fill='x', pady=(10, 0))
+        self.launch_btn.pack(fill='x', pady=(0, 5))
         
-        # Hover effects for launch button
-        def on_enter(e):
-            launch_btn.config(bg='#059669')
+        # Recording Controls
+        rec_frame = tk.Frame(btn_frame, bg='#0f172a')
+        rec_frame.pack(fill='x', pady=(5, 0))
         
-        def on_leave(e):
-            launch_btn.config(bg='#10b981')
+        self.record_btn = tk.Button(
+            rec_frame,
+            text="⏺ Start Recording",
+            command=self._toggle_recording,
+            bg='#ef4444',
+            fg='white',
+            activebackground='#dc2626',
+            activeforeground='white',
+            font=('Segoe UI', 10, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=15,
+            pady=8,
+            state='disabled'
+        )
+        self.record_btn.pack(side='left', fill='x', expand=True, padx=(0, 2.5))
         
-        launch_btn.bind('<Enter>', on_enter)
-        launch_btn.bind('<Leave>', on_leave)
+        self.video_btn = tk.Button(
+            rec_frame,
+            text="🎬 Generate Video",
+            command=self._generate_video,
+            bg='#8b5cf6',
+            fg='white',
+            activebackground='#7c3aed',
+            activeforeground='white',
+            font=('Segoe UI', 10, 'bold'),
+            relief='flat',
+            cursor='hand2',
+            padx=15,
+            pady=8,
+            state='disabled'
+        )
+        self.video_btn.pack(side='left', fill='x', expand=True, padx=(2.5, 0))
         
     def _launch(self):
         """Launch the simulation with selected parameters."""
+        if self.sim_process and self.sim_process.poll() is None:
+            messagebox.showwarning("Already Running", "Simulation is already running!")
+            return
+        
         cmd = [
             sys.executable,
             str(SIMULATION_DIR / "main.py"),
@@ -255,8 +333,111 @@ class SortingCirclesControlPanel:
         
         if self.auto_record_var.get():
             cmd.append('--record')
+            self.is_recording = True
         
-        subprocess.Popen(cmd)
+        self.sim_process = subprocess.Popen(cmd)
+        self.launch_btn.config(state='disabled')
+        self.record_btn.config(state='normal' if not self.is_recording else 'disabled')
+        self.status_label.config(text="Simulation running", fg='#10b981')
+        
+        # Monitor simulation process
+        threading.Thread(target=self._monitor_simulation, daemon=True).start()
+        
+        # Monitor frames if recording
+        if self.is_recording:
+            self.record_btn.config(text="⏹ Stop Recording")
+            threading.Thread(target=self._monitor_frames, daemon=True).start()
+    
+    def _monitor_simulation(self):
+        """Monitor the simulation process."""
+        while self.sim_process and self.sim_process.poll() is None:
+            time.sleep(0.5)
+        
+        # Simulation ended
+        self.root.after(0, self._on_simulation_end)
+    
+    def _on_simulation_end(self):
+        """Handle simulation end."""
+        self.launch_btn.config(state='normal')
+        self.record_btn.config(state='disabled', text="⏺ Start Recording")
+        self.status_label.config(text="Simulation ended", fg='#94a3b8')
+        
+        if self.is_recording:
+            self.is_recording = False
+            self.video_btn.config(state='normal')
+    
+    def _toggle_recording(self):
+        """Toggle recording on/off."""
+        if not self.sim_process or self.sim_process.poll() is not None:
+            messagebox.showwarning("Not Running", "No simulation is running!")
+            return
+        
+        # Send 's' key to simulation window (simplified - actual implementation would need IPC)
+        self.is_recording = not self.is_recording
+        
+        if self.is_recording:
+            self.record_btn.config(text="⏹ Stop Recording", bg='#f59e0b')
+            self.status_label.config(text="Recording...", fg='#ef4444')
+            threading.Thread(target=self._monitor_frames, daemon=True).start()
+        else:
+            self.record_btn.config(text="⏺ Start Recording", bg='#ef4444')
+            self.status_label.config(text="Recording stopped", fg='#94a3b8')
+            self.video_btn.config(state='normal')
+    
+    def _monitor_frames(self):
+        """Monitor frame count."""
+        frames_dir = SIMULATION_DIR / "frames"
+        while self.is_recording:
+            if frames_dir.exists():
+                frame_files = list(frames_dir.glob("frame_*.png"))
+                self.frames_count = len(frame_files)
+                self.root.after(0, lambda: self.frames_label.config(text=f"Frames: {self.frames_count}"))
+            time.sleep(0.5)
+    
+    def _generate_video(self):
+        """Generate video from frames using API."""
+        frames_dir = SIMULATION_DIR / "frames"
+        
+        if not frames_dir.exists() or not list(frames_dir.glob("frame_*.png")):
+            messagebox.showerror("No Frames", "No frames found to generate video!")
+            return
+        
+        self.video_btn.config(state='disabled', text="Generating...")
+        self.status_label.config(text="Generating video...", fg='#8b5cf6')
+        
+        threading.Thread(target=self._generate_video_thread, daemon=True).start()
+    
+    def _generate_video_thread(self):
+        """Generate video in background thread."""
+        try:
+            # Call API endpoint
+            response = requests.post(
+                'http://localhost:5000/api/generate-video',
+                json={
+                    'addon_id': 'sorting_circles',
+                    'frame_type': 'normal',
+                    'fps': int(self.fps_var.get()),
+                    'codec': 'libx264'
+                },
+                timeout=300
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                self.root.after(0, lambda: messagebox.showinfo(
+                    "Success",
+                    f"Video generated successfully!\n{result.get('video_path', '')}"
+                ))
+                self.root.after(0, lambda: self.status_label.config(text="Video generated!", fg='#10b981'))
+            else:
+                error = response.json().get('error', 'Unknown error')
+                self.root.after(0, lambda: messagebox.showerror("Error", f"Failed to generate video:\n{error}"))
+                self.root.after(0, lambda: self.status_label.config(text="Video generation failed", fg='#ef4444'))
+        except Exception as e:
+            self.root.after(0, lambda: messagebox.showerror("Error", f"Error generating video:\n{str(e)}"))
+            self.root.after(0, lambda: self.status_label.config(text="Video generation failed", fg='#ef4444'))
+        finally:
+            self.root.after(0, lambda: self.video_btn.config(state='normal', text="🎬 Generate Video"))
         
     def run(self):
         """Run the control panel."""

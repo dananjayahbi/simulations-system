@@ -1,0 +1,10 @@
+# Sorting Circles - Python Dependencies
+# 
+# These packages will be automatically installed when the plugin is uploaded
+# to the Loops Visualization System.
+
+# Core visualization (usually pre-installed)
+pygame-ce>=2.3.2
+
+# For HTTP requests (video generation API)
+requests>=2.28.0

@@ -28,6 +28,7 @@ import os
 import sys
 import random
 import math
+import argparse
 from pathlib import Path
 
 # Add shared directory to path for imports
@@ -43,11 +44,11 @@ from base_simulation import BaseSimulation
 class SortingCircles(BaseSimulation):
     """Radial circle-based sorting visualization."""
     
-    def __init__(self):
-        super().__init__(width=1200, height=800, fps=60, title="Sorting Circles")
+    def __init__(self, width=1200, height=800, fps=60, array_size=50, algorithm="bubble", auto_record=False):
+        super().__init__(width=width, height=height, fps=fps, title="Sorting Circles")
         
         # Array settings
-        self.array_size = 50
+        self.array_size = array_size
         self.array = list(range(1, self.array_size + 1))
         random.shuffle(self.array)
         
@@ -84,6 +85,13 @@ class SortingCircles(BaseSimulation):
         
         # Setup recording folder
         self.frames_folder = str(current_dir / "frames")
+        os.makedirs(self.frames_folder, exist_ok=True)
+        
+        # Start recording if requested
+        self.auto_record = auto_record
+        
+        # Set initial algorithm
+        self.initial_algorithm = algorithm
     
     def get_circle_color(self, value):
         """Generate HSV gradient color based on value."""
@@ -352,60 +360,42 @@ class SortingCircles(BaseSimulation):
         self.draw_ui()
     
     def draw_ui(self):
-        """Draw UI overlay with information and controls."""
-        y_offset = 20
-        
-        # Title
-        title_surface = self.title_font.render(self.algorithm_name, True, self.text_color)
-        self.screen.blit(title_surface, (20, y_offset))
-        y_offset += 50
-        
-        # Status
-        status = "Sorting..." if self.is_sorting else "Paused" if self.paused else "Ready"
-        status_color = (100, 255, 100) if self.is_sorting else (255, 200, 100) if self.paused else self.text_color
-        status_surface = self.ui_font.render(f"Status: {status}", True, status_color)
-        self.screen.blit(status_surface, (20, y_offset))
-        y_offset += 30
-        
-        # Stats
-        speed_text = self.ui_font.render(f"Speed: {self.speed} ops/sec", True, self.text_color)
-        self.screen.blit(speed_text, (20, y_offset))
-        y_offset += 25
-        
-        comp_text = self.ui_font.render(f"Comparisons: {self.comparisons}", True, self.text_color)
-        self.screen.blit(comp_text, (20, y_offset))
-        y_offset += 25
-        
-        # Recording indicator
-        if self.recording:
-            rec_text = self.ui_font.render(f"● REC - Frame: {self.frame_count}", True, (255, 50, 50))
-            self.screen.blit(rec_text, (20, y_offset))
-            y_offset += 30
-        
-        # Controls help
-        y_offset = self.height - 180
-        controls_title = self.ui_font.render("Controls:", True, self.text_color)
-        self.screen.blit(controls_title, (20, y_offset))
-        y_offset += 25
-        
-        controls = [
-            "SPACE - Play/Pause",
-            "R - Reset & Shuffle",
-            "S - Record Frames",
-            "1/2/3 - Bubble/Quick/Merge",
-            "UP/DOWN - Speed ±5",
-            "ESC - Exit"
-        ]
-        
-        for control in controls:
-            text = self.small_font.render(control, True, (180, 180, 180))
-            self.screen.blit(text, (20, y_offset))
-            y_offset += 20
+        """Draw UI overlay - kept minimal for clean recording."""
+        # No UI overlays - clean window for recording
+        pass
 
 
 def main():
     """Main entry point."""
-    sim = SortingCircles()
+    parser = argparse.ArgumentParser(description='Sorting Circles Visualization')
+    parser.add_argument('--width', type=int, default=1200, help='Window width')
+    parser.add_argument('--height', type=int, default=800, help='Window height')
+    parser.add_argument('--fps', type=int, default=60, help='Frames per second')
+    parser.add_argument('--array-size', type=int, default=50, help='Number of circles')
+    parser.add_argument('--algorithm', type=str, default='bubble', choices=['bubble', 'quick', 'merge'], help='Sorting algorithm')
+    parser.add_argument('--record', action='store_true', help='Start recording on launch')
+    
+    args = parser.parse_args()
+    
+    sim = SortingCircles(
+        width=args.width,
+        height=args.height,
+        fps=args.fps,
+        array_size=args.array_size,
+        algorithm=args.algorithm,
+        auto_record=args.record
+    )
+    
+    # Start with selected algorithm if auto-recording
+    if args.record:
+        algorithm_map = {
+            'bubble': 'Bubble Sort',
+            'quick': 'Quick Sort',
+            'merge': 'Merge Sort'
+        }
+        sim.start_recording()
+        sim.start_sorting(algorithm_map[args.algorithm])
+    
     sim.run()
 
 
