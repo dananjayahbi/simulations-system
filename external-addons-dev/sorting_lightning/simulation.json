@@ -1,0 +1,17 @@
+{
+  "id": "sorting_lightning",
+  "name": "⚡ Sorting Lightning",
+  "description": "Advanced sorting visualization with lightning effects, particle systems, smooth animations, and multiple visual themes. Features electric arcs, glowing effects, and cinematic visuals.",
+  "icon": "⚡",
+  "color": "#a855f7",
+  "version": "1.0.0",
+  "author": "AI Assistant",
+  "license": "MIT",
+  "homepage": "https://github.com/dananjayahbi/simulations-system",
+  "min_loops_version": "1.0.0",
+  "tags": ["sorting", "algorithm", "visualization", "effects", "particles", "lightning"],
+  "requires_pygame": true,
+  "entry_point": "main.py",
+  "control_panel": "control_panel.py",
+  "dependencies": []
+}

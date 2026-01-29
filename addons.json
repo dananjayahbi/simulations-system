@@ -23,7 +23,113 @@
       "installed_at": "2026-01-27T20:52:11.845466",
       "enabled": true,
       "builtin": true
+    },
+    "sorting_lightning": {
+      "id": "sorting_lightning",
+      "name": "\u26a1 Sorting Lightning",
+      "description": "Advanced sorting visualization with lightning effects, particle systems, smooth animations, and multiple visual themes. Features electric arcs, glowing effects, and cinematic visuals.",
+      "icon": "\u26a1",
+      "color": "#a855f7",
+      "version": "1.0.0",
+      "author": "AI Assistant",
+      "license": "MIT",
+      "homepage": "https://github.com/dananjayahbi/simulations-system",
+      "min_loops_version": "1.0.0",
+      "tags": [
+        "sorting",
+        "algorithm",
+        "visualization",
+        "effects",
+        "particles",
+        "lightning"
+      ],
+      "requires_pygame": true,
+      "entry_point": "main.py",
+      "control_panel": "control_panel.py",
+      "dependencies": [],
+      "installed_at": "2026-01-29T11:10:36.728870",
+      "enabled": true,
+      "builtin": false
+    },
+    "neon_van_gogh": {
+      "id": "neon_van_gogh",
+      "name": "The Neon Van Gogh Field",
+      "description": "Thousands of glowing, short line segments trace swirling paths over a dark canvas.",
+      "icon": "\ud83c\udfa8",
+      "color": "#3b82f6",
+      "version": "1.0.0",
+      "author": "AI Assistant",
+      "license": "MIT",
+      "tags": [
+        "art",
+        "visualization",
+        "particles"
+      ],
+      "requires_pygame": true,
+      "entry_point": "main.py",
+      "control_panel": "control_panel.py",
+      "dependencies": [
+        "numpy",
+        "noise"
+      ],
+      "installed_at": "2026-01-29T12:19:20.816452",
+      "enabled": true,
+      "builtin": false
+    },
+    "galton_board": {
+      "id": "galton_board",
+      "name": "The Galton Board Drop",
+      "description": "Thousands of tiny balls drop through a pegboard pyramid, settling into a perfect Bell Curve.",
+      "icon": "\ud83d\udcc9",
+      "color": "#00BFFF",
+      "version": "1.0.0",
+      "author": "AI Assistant",
+      "license": "MIT",
+      "tags": [
+        "physics",
+        "math",
+        "simulation",
+        "distribution"
+      ],
+      "requires_pygame": true,
+      "entry_point": "main.py",
+      "control_panel": "control_panel.py",
+      "dependencies": [
+        "pymunk"
+      ],
+      "installed_at": "2026-01-29T12:29:38.762232",
+      "enabled": true,
+      "builtin": false
+    },
+    "geometry_sorter": {
+      "id": "geometry_sorter",
+      "name": "\ud83d\udd37 Geometry Sorter",
+      "description": "A stream of mixed shapes falls onto a sorting slide. Only correct shapes pass through corresponding holes - squares through square holes, circles through circular holes. Features satisfying physics-based sorting with pymunk.",
+      "icon": "\ud83d\udd37",
+      "color": "#06b6d4",
+      "version": "1.0.0",
+      "author": "AI Assistant",
+      "license": "MIT",
+      "homepage": "https://github.com/dananjayahbi/simulations-system",
+      "min_loops_version": "1.0.0",
+      "tags": [
+        "physics",
+        "sorting",
+        "shapes",
+        "oddly-satisfying",
+        "pymunk",
+        "geometry"
+      ],
+      "requires_pygame": true,
+      "entry_point": "main.py",
+      "control_panel": "control_panel.py",
+      "dependencies": [
+        "pymunk"
+      ],
+      "installed_at": "2026-01-29T16:57:57.359838",
+      "enabled": true,
+      "builtin": false
     }
   },
-  "last_updated": "2026-01-29T10:34:21.324421"
+  "last_updated": "2026-01-29T16:57:57.359848"
 }
