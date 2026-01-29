@@ -91,6 +91,11 @@ def discover_simulations():
     if not SIMULATIONS_DIR.exists():
         return simulations
     
+    # Load addon registry for timestamps and metadata
+    addon_mgr = get_addon_manager()
+    registry = addon_mgr._load_registry()
+    addons_registry = registry.get("addons", {})
+    
     for item in SIMULATIONS_DIR.iterdir():
         if item.is_dir() and not item.name.startswith('__'):
             # Check for control_panel.py or main.py
@@ -119,6 +124,19 @@ def discover_simulations():
                             metadata.update(custom)
                     except:
                         pass
+                
+                # Merge with addon registry data (includes installed_at timestamp)
+                if item.name in addons_registry:
+                    addon_data = addons_registry[item.name]
+                    metadata["installed_at"] = addon_data.get("installed_at")
+                    metadata["enabled"] = addon_data.get("enabled", True)
+                    metadata["builtin"] = addon_data.get("builtin", False)
+                else:
+                    # Fallback to directory creation time if no registry entry
+                    stat = item.stat()
+                    metadata["installed_at"] = datetime.fromtimestamp(stat.st_ctime).isoformat()
+                    metadata["enabled"] = True
+                    metadata["builtin"] = False
                 
                 simulations[item.name] = metadata
     

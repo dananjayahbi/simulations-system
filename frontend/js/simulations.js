@@ -10,7 +10,13 @@ async function fetchSimulations() {
         const data = await response.json();
         
         if (data.status === 'success') {
-            AppState.simulations = data.simulations;
+            // Sort simulations by installed_at (newest first)
+            AppState.simulations = data.simulations.sort((a, b) => {
+                const dateA = a.installed_at ? new Date(a.installed_at) : new Date(0);
+                const dateB = b.installed_at ? new Date(b.installed_at) : new Date(0);
+                return dateB - dateA; // Newest first
+            });
+            
             renderQuickLaunch();
             renderSimulationsList();
             renderTerminalLaunchGrid();
@@ -90,17 +96,39 @@ function renderQuickLaunch() {
         return;
     }
     
-    elements.quickLaunchGrid.innerHTML = AppState.simulations.map(sim => `
+    // Get search query
+    const searchInput = document.getElementById('dashboard-search');
+    const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    // Filter simulations based on search
+    const filteredSims = AppState.simulations.filter(sim => {
+        if (!searchQuery) return true;
+        const searchText = `${sim.name} ${sim.description} ${(sim.tags || []).join(' ')} ${sim.id}`.toLowerCase();
+        return searchText.includes(searchQuery);
+    });
+    
+    if (filteredSims.length === 0) {
+        elements.quickLaunchGrid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-search"></i>
+                <h3>No Matching Simulations</h3>
+                <p>Try a different search term</p>
+            </div>
+        `;
+        return;
+    }
+    
+    elements.quickLaunchGrid.innerHTML = filteredSims.map(sim => `
         <div class="simulation-card" style="--card-color: ${sim.color || '#6366f1'}" data-id="${sim.id}">
             <div class="simulation-icon">${sim.icon || '🔄'}</div>
             <div class="simulation-name">${sim.name}</div>
             <div class="simulation-desc">${sim.description}</div>
             <div class="simulation-actions">
                 <button class="btn btn-secondary btn-info" data-id="${sim.id}">
-                    <i class="fas fa-info-circle"></i> Info
+                    <i class="fas fa-info-circle"></i>
                 </button>
                 <button class="btn btn-primary btn-launch" data-id="${sim.id}">
-                    <i class="fas fa-rocket"></i> Launch
+                    <i class="fas fa-rocket"></i>
                 </button>
             </div>
         </div>
@@ -144,7 +172,29 @@ function renderSimulationsList() {
         return;
     }
     
-    elements.simulationsList.innerHTML = AppState.simulations.map(sim => `
+    // Get search query
+    const searchInput = document.getElementById('simulations-search');
+    const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    // Filter simulations based on search
+    const filteredSims = AppState.simulations.filter(sim => {
+        if (!searchQuery) return true;
+        const searchText = `${sim.name} ${sim.description} ${(sim.tags || []).join(' ')} ${sim.id}`.toLowerCase();
+        return searchText.includes(searchQuery);
+    });
+    
+    if (filteredSims.length === 0) {
+        elements.simulationsList.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-search"></i>
+                <h3>No Matching Simulations</h3>
+                <p>Try a different search term</p>
+            </div>
+        `;
+        return;
+    }
+    
+    elements.simulationsList.innerHTML = filteredSims.map(sim => `
         <div class="simulation-list-item">
             <div class="simulation-list-icon">${sim.icon || '🔄'}</div>
             <div class="simulation-list-info">
@@ -165,6 +215,20 @@ function renderSimulationsList() {
     elements.simulationsList.querySelectorAll('.btn-launch').forEach(btn => {
         btn.addEventListener('click', () => launchSimulation(btn.dataset.id));
     });
+}
+
+// Setup search bar event listeners
+function setupSearchListeners() {
+    const dashboardSearch = document.getElementById('dashboard-search');
+    const simulationsSearch = document.getElementById('simulations-search');
+    
+    if (dashboardSearch) {
+        dashboardSearch.addEventListener('input', renderQuickLaunch);
+    }
+    
+    if (simulationsSearch) {
+        simulationsSearch.addEventListener('input', renderSimulationsList);
+    }
 }
 
 function renderTerminalLaunchGrid() {

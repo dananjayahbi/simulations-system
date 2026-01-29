@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initTerminalControls();
     initVideoElements();
     
+    // Setup search listeners
+    setupSearchListeners();
+    
     // Fetch initial data
     fetchSimulations();
     fetchSystemInfo();

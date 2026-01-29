@@ -32,6 +32,12 @@ class AddonsManager {
             scanBtn.addEventListener('click', () => this.scanAddons());
         }
         
+        // Search bar
+        const searchBar = document.getElementById('addons-search');
+        if (searchBar) {
+            searchBar.addEventListener('input', () => this.renderAddons());
+        }
+        
         // Upload modal elements
         this.uploadModal = document.getElementById('upload-modal');
         
@@ -114,7 +120,12 @@ class AddonsManager {
             const data = await response.json();
             
             if (data.status === 'success') {
-                this.addons = data.addons;
+                // Sort add-ons by installed_at (newest first)
+                this.addons = data.addons.sort((a, b) => {
+                    const dateA = a.installed_at ? new Date(a.installed_at) : new Date(0);
+                    const dateB = b.installed_at ? new Date(b.installed_at) : new Date(0);
+                    return dateB - dateA; // Newest first
+                });
                 this.renderAddons();
             } else {
                 this.showError('Failed to load add-ons: ' + data.message);
@@ -129,21 +140,42 @@ class AddonsManager {
         const container = document.getElementById('addons-container');
         if (!container) return;
         
-        if (this.addons.length === 0) {
-            container.innerHTML = `
-                <div class="addons-empty">
-                    <div class="addons-empty-icon">📦</div>
-                    <div class="addons-empty-text">No add-ons installed</div>
-                    <div class="addons-empty-hint">Upload a simulation add-on to get started</div>
-                </div>
-            `;
+        // Get search query
+        const searchInput = document.getElementById('addons-search');
+        const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
+        
+        // Filter add-ons based on search
+        const filteredAddons = this.addons.filter(addon => {
+            if (!searchQuery) return true;
+            const searchText = `${addon.name} ${addon.description} ${(addon.tags || []).join(' ')} ${addon.id} ${addon.author}`.toLowerCase();
+            return searchText.includes(searchQuery);
+        });
+        
+        if (filteredAddons.length === 0) {
+            if (searchQuery) {
+                container.innerHTML = `
+                    <div class="addons-empty">
+                        <div class="addons-empty-icon">🔍</div>
+                        <div class="addons-empty-text">No Matching Add-ons</div>
+                        <div class="addons-empty-hint">Try a different search term</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="addons-empty">
+                        <div class="addons-empty-icon">📦</div>
+                        <div class="addons-empty-text">No add-ons installed</div>
+                        <div class="addons-empty-hint">Upload a simulation add-on to get started</div>
+                    </div>
+                `;
+            }
             return;
         }
         
         const grid = document.createElement('div');
         grid.className = 'addons-grid';
         
-        this.addons.forEach(addon => {
+        filteredAddons.forEach(addon => {
             const card = this.createAddonCard(addon);
             grid.appendChild(card);
         });
@@ -389,24 +421,37 @@ class AddonsManager {
     }
     
     async launchAddon(addonId) {
+        // Clear terminal
+        const output = document.getElementById('terminal-output');
+        if (output) {
+            output.innerHTML = '';
+        }
+        
+        // Show loading modal
+        this.showLoadingModal('Launching Simulation', 'Initializing...');
+        
         try {
             const response = await fetch(`/api/simulations/${addonId}/launch`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ embedded: false })
+                body: JSON.stringify({ embedded: true })
             });
             
             const data = await response.json();
             
+            // Close loading modal
+            this.closeLoadingModal();
+            
             if (data.status === 'success') {
-                this.showNotification(`Launching ${addonId}...`, 'success');
+                this.showNotification(`Launched ${data.message} in embedded mode`, 'success');
             } else {
                 throw new Error(data.message);
             }
         } catch (error) {
             console.error('Error launching add-on:', error);
+            this.closeLoadingModal();
             this.showNotification('Failed to launch: ' + error.message, 'error');
         }
     }
@@ -466,27 +511,36 @@ class AddonsManager {
         const addon = this.addons.find(a => a.id === addonId);
         const addonName = addon ? addon.name : addonId;
         
-        if (!confirm(`Are you sure you want to remove "${addonName}"?\n\nThis will delete:\n- Simulation files\n- Generated frames\n- Generated videos\n\nThis action cannot be undone.`)) {
-            return;
-        }
-        
-        try {
-            const response = await fetch(`/api/addon/${addonId}`, {
-                method: 'DELETE'
-            });
-            
-            const data = await response.json();
-            
-            if (data.status === 'success') {
-                this.showNotification('Add-on removed successfully', 'success');
-                this.loadAddons();
-            } else {
-                throw new Error(data.message);
+        // Show confirmation modal
+        this.showConfirmModal(
+            'Remove Add-on',
+            `Are you sure you want to remove "${addonName}"?<br><br>This will delete:<br>• Simulation files<br>• Generated frames<br>• Generated videos<br><br><strong>This action cannot be undone.</strong>`,
+            async () => {
+                // Show loading modal
+                this.showLoadingModal('Removing Add-on', 'Deleting files...');
+                
+                try {
+                    const response = await fetch(`/api/addon/${addonId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    this.closeLoadingModal();
+                    
+                    if (data.status === 'success') {
+                        this.showNotification('Add-on removed successfully', 'success');
+                        this.loadAddons();
+                    } else {
+                        throw new Error(data.message);
+                    }
+                } catch (error) {
+                    console.error('Error removing add-on:', error);
+                    this.closeLoadingModal();
+                    this.showNotification('Failed to remove: ' + error.message, 'error');
+                }
             }
-        } catch (error) {
-            console.error('Error removing add-on:', error);
-            this.showNotification('Failed to remove: ' + error.message, 'error');
-        }
+        );
     }
     
     async scanAddons() {
@@ -504,12 +558,13 @@ class AddonsManager {
     }
     
     showNotification(message, type = 'info') {
-        // Use the existing notification system if available
-        if (window.showNotification) {
-            window.showNotification(message, type);
+        // Use the existing toast system
+        if (window.showToast) {
+            window.showToast(message, type === 'info' ? 'success' : type);
+        } else if (typeof showToast === 'function') {
+            showToast(message, type === 'info' ? 'success' : type);
         } else {
             console.log(`[${type.toUpperCase()}] ${message}`);
-            alert(message);
         }
     }
     
@@ -524,6 +579,77 @@ class AddonsManager {
                 </div>
             `;
         }
+    }
+    
+    showLoadingModal(title, message) {
+        // Remove existing modal if present
+        this.closeLoadingModal();
+        
+        const modal = document.createElement('div');
+        modal.id = 'addon-loading-modal';
+        modal.className = 'modal active';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <div class="modal-body" style="padding: 40px 30px;">
+                    <div class="loading-spinner" style="margin: 0 auto 20px;"></div>
+                    <h3 style="margin: 0 0 10px; font-size: 18px;">${title}</h3>
+                    <p style="margin: 0; color: var(--text-muted); font-size: 14px;">${message}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    closeLoadingModal() {
+        const modal = document.getElementById('addon-loading-modal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+    
+    showConfirmModal(title, message, onConfirm) {
+        // Remove existing modal if present
+        const existingModal = document.getElementById('addon-confirm-modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        const modal = document.createElement('div');
+        modal.id = 'addon-confirm-modal';
+        modal.className = 'modal active';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>${title}</h3>
+                    <button class="modal-close" id="addon-confirm-close">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 24px;">
+                    <p style="margin: 0; line-height: 1.6;">${message}</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="addon-confirm-cancel">Cancel</button>
+                    <button class="btn btn-danger" id="addon-confirm-ok">Remove</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Event listeners
+        const closeModal = () => modal.remove();
+        
+        modal.querySelector('#addon-confirm-close').addEventListener('click', closeModal);
+        modal.querySelector('#addon-confirm-cancel').addEventListener('click', closeModal);
+        modal.querySelector('#addon-confirm-ok').addEventListener('click', () => {
+            closeModal();
+            onConfirm();
+        });
+        
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
     }
 }
 
